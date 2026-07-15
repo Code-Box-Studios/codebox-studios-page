@@ -16,7 +16,7 @@ The content is identical across all three; only the visual treatment changes.
 | ------------- | -------------------------------------------------- |
 | Framework     | Next.js 15.4 (App Router, React Server Components)  |
 | CMS / backend | Payload CMS 3.86 (embedded in Next.js)             |
-| Database      | SQLite (`@payloadcms/db-sqlite`) — zero-config dev |
+| Database      | SQLite locally, Postgres in production — adapter picked from `DATABASE_URI` |
 | Styling       | Tailwind CSS v4 with design-token CSS variables    |
 | UI primitives | Radix UI (shadcn-style components), lucide icons   |
 | Language      | TypeScript                                         |
@@ -95,11 +95,40 @@ src/
   seed/                  idempotent seed (content + admin user)
 ```
 
-## Production notes
+## Database
 
-- Build: `pnpm build` then `pnpm start`.
-- **Database:** SQLite is great for local dev. For production, switch to Postgres
-  (`@payloadcms/db-postgres`) or keep SQLite on a persistent volume, and set `DATABASE_URI`.
-- Set a strong `PAYLOAD_SECRET` and a real admin password.
-- Uploaded media is stored on the local filesystem by default; use a storage adapter (S3, etc.)
-  for a serverless deploy.
+The Payload adapter is chosen automatically from the `DATABASE_URI` scheme:
+
+- `file:./codebox.db` → **SQLite** (default; zero-config local dev).
+- `postgres://…` / `postgresql://…` → **Postgres** (required for serverless hosts).
+
+SQLite is a local file, so it **cannot** run on a serverless host (read-only filesystem) — use
+Postgres there.
+
+## Deploying to Vercel
+
+Vercel's filesystem is read-only, so the app needs a hosted Postgres. [Neon](https://neon.tech)
+has a free tier and integrates with Vercel:
+
+1. **Create the database.** In Vercel → your project → **Storage → Create Database → Postgres
+   (Neon)**. It provisions the DB and adds connection env vars to the project. (Or create a Neon
+   project directly and copy its connection string.)
+2. **Set env vars** on the Vercel project (Settings → Environment Variables):
+   - `DATABASE_URI` = the Neon **pooled** connection string
+     (`postgresql://…-pooler.…neon.tech/…?sslmode=require`) — pooling is important on serverless.
+   - `PAYLOAD_SECRET` = a long random string.
+3. **Load the schema + content once** from your machine, pointed at the Neon **direct**
+   (non-pooled) URL — DDL should use the direct endpoint:
+   ```bash
+   DATABASE_URI="postgresql://…@…neon.tech/…?sslmode=require" pnpm seed
+   ```
+   This creates the tables, an admin user, and all the landing content in Neon.
+4. **Redeploy.** The site now reads/writes Neon and renders.
+
+Other notes:
+
+- Set a strong `PAYLOAD_SECRET` and change the seeded admin password after first login.
+- Uploaded media is stored on the local filesystem by default; for a serverless deploy add a
+  storage adapter (S3, Vercel Blob, etc.) so uploads persist.
+- Contact-form and newsletter submissions are stored in the CMS; add a Payload email adapter if you
+  also want email delivery.
