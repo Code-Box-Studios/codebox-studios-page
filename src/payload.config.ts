@@ -1,5 +1,4 @@
 import { postgresAdapter } from '@payloadcms/db-postgres'
-import { sqliteAdapter } from '@payloadcms/db-sqlite'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import path from 'path'
 import { buildConfig } from 'payload'
@@ -16,21 +15,18 @@ import { LandingContent } from './globals/LandingContent'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
-// Serverless hosts (Vercel) have a read-only filesystem, so production uses a
-// hosted Postgres. Local dev falls back to a zero-config SQLite file. The
-// adapter is chosen from the connection string — set DATABASE_URI (or use the
-// DATABASE_URL / POSTGRES_URL that Vercel's Neon integration injects).
+// Postgres everywhere. SQLite's native driver (libsql) can't be bundled onto
+// serverless hosts like Vercel, so the app uses Postgres in every environment.
+// Set DATABASE_URI (or rely on the DATABASE_URL / POSTGRES_URL that Vercel's
+// Neon integration injects).
 const databaseUri =
-  process.env.DATABASE_URI ||
-  process.env.DATABASE_URL ||
-  process.env.POSTGRES_URL ||
-  'file:./codebox.db'
+  process.env.DATABASE_URI || process.env.DATABASE_URL || process.env.POSTGRES_URL
 
-const isPostgres = /^postgres(ql)?:\/\//.test(databaseUri)
-
-const db = isPostgres
-  ? postgresAdapter({ pool: { connectionString: databaseUri } })
-  : sqliteAdapter({ client: { url: databaseUri } })
+if (!databaseUri) {
+  throw new Error(
+    'DATABASE_URI is not set. Provide a Postgres connection string (see .env.example).',
+  )
+}
 
 export default buildConfig({
   admin: {
@@ -49,6 +45,6 @@ export default buildConfig({
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
-  db,
+  db: postgresAdapter({ pool: { connectionString: databaseUri } }),
   sharp,
 })

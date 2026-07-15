@@ -16,19 +16,25 @@ The content is identical across all three; only the visual treatment changes.
 | ------------- | -------------------------------------------------- |
 | Framework     | Next.js 15.4 (App Router, React Server Components)  |
 | CMS / backend | Payload CMS 3.86 (embedded in Next.js)             |
-| Database      | SQLite locally, Postgres in production — adapter picked from `DATABASE_URI` |
+| Database      | Postgres (`@payloadcms/db-postgres`) — every environment |
 | Styling       | Tailwind CSS v4 with design-token CSS variables    |
 | UI primitives | Radix UI (shadcn-style components), lucide icons   |
 | Language      | TypeScript                                         |
 
 ## Getting started
 
+The app uses Postgres in every environment. For local dev, the quickest DB is Docker:
+
 ```bash
+docker run -d --name codebox-pg -e POSTGRES_PASSWORD=codebox -e POSTGRES_DB=codebox -p 5432:5432 postgres:16
+
 pnpm install
-cp .env.example .env        # then set a real PAYLOAD_SECRET
-pnpm seed                   # creates the admin user + loads all content
+cp .env.example .env        # DATABASE_URI is already set for the Docker DB above; set a real PAYLOAD_SECRET
+pnpm seed                   # creates the schema, admin user, and all content
 pnpm dev                    # http://localhost:3000
 ```
+
+(No Docker? Point `DATABASE_URI` at any Postgres — e.g. a free Neon database — instead.)
 
 - **Site:** http://localhost:3000
 - **Admin:** http://localhost:3000/admin
@@ -97,13 +103,10 @@ src/
 
 ## Database
 
-The Payload adapter is chosen automatically from the `DATABASE_URI` scheme:
-
-- `file:./codebox.db` → **SQLite** (default; zero-config local dev).
-- `postgres://…` / `postgresql://…` → **Postgres** (required for serverless hosts).
-
-SQLite is a local file, so it **cannot** run on a serverless host (read-only filesystem) — use
-Postgres there.
+The app is **Postgres-only** (`@payloadcms/db-postgres`), configured via `DATABASE_URI`. SQLite was
+dropped because its native driver (`libsql`) can't be bundled onto serverless hosts like Vercel — so
+the same database engine is used locally and in production. Any Postgres works: local Docker, Neon,
+Supabase, RDS, etc.
 
 ## Deploying to Vercel
 
