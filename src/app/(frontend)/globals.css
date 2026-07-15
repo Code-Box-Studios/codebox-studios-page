@@ -1,0 +1,219 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+/*
+  Design tokens for Code Box Studios.
+  Semantic roles are declared once and remapped per visual direction via
+  [data-theme]. Tailwind utilities (bg-surface, text-ink, border-line, …) read
+  the live CSS variables, so switching the theme restyles the whole site.
+*/
+
+@theme inline {
+  --font-display: var(--font-space-grotesk), 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-space-grotesk), ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, 'JetBrains Mono', SFMono-Regular, Menlo, monospace;
+
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-body: var(--body);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-accent: var(--accent);
+  --color-accent-text: var(--accent-text);
+  --color-accent-fg: var(--accent-fg);
+  --color-brand: var(--brand);
+  --color-brand-hover: var(--brand-hover);
+  --color-brand-ink: var(--brand-ink);
+
+  --color-line: var(--line);
+  --color-line-soft: var(--line-soft);
+
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-card: var(--card);
+  --color-card-2: var(--card-2);
+  --color-card-border: var(--card-border);
+
+  --color-header-bg: var(--header-bg);
+  --color-header-fg: var(--header-fg);
+  --color-header-border: var(--header-border);
+
+  --color-contact-bg: var(--contact-bg);
+  --color-contact-fg: var(--contact-fg);
+  --color-contact-eyebrow: var(--contact-eyebrow);
+  --color-footer-bg: var(--footer-bg);
+
+  --radius-pill: 32px;
+
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+}
+
+@keyframes accordion-down {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+  }
+}
+
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+  to {
+    height: 0;
+  }
+}
+
+/* ---- Editorial White (default) ---------------------------------------- */
+:root,
+[data-theme='editorial'] {
+  --ink: #17171c;
+  --ink-soft: #212121;
+  --body: #55555f;
+  --muted: #6a6a78;
+  --faint: #73737f;
+  --accent: #ff7759;
+  --accent-text: #c2410c;
+  --accent-fg: #17171c;
+  --brand: #17171c;
+  --brand-hover: #000000;
+  --brand-ink: #ffffff;
+
+  --line: #d9d9dd;
+  --line-soft: #f2f2f2;
+
+  --surface: #ffffff;
+  --surface-2: #faf9f7;
+  --surface-3: #eeece7;
+  --card: #ffffff;
+  --card-2: #ffffff;
+  --card-border: #e5e7eb;
+
+  --header-bg: #ffffff;
+  --header-fg: #212121;
+  --header-border: #f2f2f2;
+
+  --contact-bg: #003c33;
+  --contact-fg: #b8d6cc;
+  --contact-eyebrow: #7fbfab;
+  --footer-bg: #17171c;
+}
+
+/* ---- Command (deep green / navy, high contrast) ----------------------- */
+[data-theme='command'] {
+  --ink: #17171c;
+  --ink-soft: #212121;
+  --body: #55555f;
+  --muted: #6a6a78;
+  --faint: #73737f;
+  --accent: #ff7759;
+  --accent-text: #c2410c;
+  --accent-fg: #003c33;
+  --brand: #003c33;
+  --brand-hover: #002b25;
+  --brand-ink: #ffffff;
+
+  --line: #e5e7eb;
+  --line-soft: #ececec;
+
+  --surface: #ffffff;
+  --surface-2: #faf9f7;
+  --surface-3: #faf9f7;
+  --card: #ffffff;
+  --card-2: #ffffff;
+  --card-border: #e5e7eb;
+
+  --header-bg: #003c33;
+  --header-fg: #cfe4dc;
+  --header-border: rgba(255, 255, 255, 0.1);
+
+  --contact-bg: #071829;
+  --contact-fg: #9fb0c0;
+  --contact-eyebrow: #6f9fd6;
+  --footer-bg: #17171c;
+}
+
+/* ---- Modular Stone (warm stone, navy accents) ------------------------- */
+[data-theme='stone'] {
+  --ink: #17171c;
+  --ink-soft: #212121;
+  --body: #55554e;
+  --muted: #6a6a78;
+  --faint: #73737f;
+  --accent: #ff7759;
+  --accent-text: #c2410c;
+  --accent-fg: #071829;
+  --brand: #071829;
+  --brand-hover: #0c223b;
+  --brand-ink: #ffffff;
+
+  --line: #e6e3da;
+  --line-soft: #ede9e0;
+
+  --surface: #ffffff;
+  --surface-2: #faf9f7;
+  --surface-3: #eeece7;
+  --card: #ffffff;
+  --card-2: #f5f3ee;
+  --card-border: #e6e3da;
+
+  --header-bg: #eeece7;
+  --header-fg: #3a3a40;
+  --header-border: #e0ddd4;
+
+  --contact-bg: #071829;
+  --contact-fg: #9fb0c0;
+  --contact-eyebrow: #6f9fd6;
+  --footer-bg: #17171c;
+}
+
+@layer base {
+  * {
+    border-color: var(--line);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  /* Offset anchor jumps so section tops clear the sticky header. */
+  :where(section[id], div[id]) {
+    scroll-margin-top: 96px;
+  }
+
+  body {
+    background-color: var(--surface);
+    color: var(--body);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background: #ffad9b;
+    color: #17171c;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    font-family: var(--font-display);
+    color: var(--ink);
+    font-weight: 500;
+  }
+}
+
+/* Utility helpers used across sections */
+@utility eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
