@@ -1,0 +1,50 @@
+/* The visual metaphor follows the studio's modular engineering work. */
+#services,#process{overflow-x:clip}
+.hero .scene-note{display:none}
+.hero .visual-caption{font-family:'Space Grotesk',sans-serif;font-size:11px;letter-spacing:0;text-transform:none;color:#c6b3ae}
+.hero-echo{pointer-events:auto;opacity:clamp(0,calc((var(--p) - .28) * 10),1)}
+.hero-echo h2{font-size:clamp(45px,5.7vw,83px)}
+.hero-echo .business-explanation{max-width:390px;min-height:76px;font-size:14px;line-height:1.75;margin-top:23px}
+.hero-echo .small-label{max-width:440px;line-height:1.7;font-size:9px;margin-bottom:24px}
+.layer-key{display:flex;flex-wrap:wrap;gap:7px;max-width:430px;margin-top:15px}
+.layer-key>span{display:flex;align-items:center;gap:7px;border:1px solid #ffffff1b;border-radius:4px;padding:7px 9px;font:8px 'JetBrains Mono',monospace;letter-spacing:.01em;color:#92929b;background:#17171c}
+.layer-key>span:before{content:'';width:5px;height:5px;flex:none;background:#a7a7af;border-radius:1px}
+.layer-key>span[data-layer='interface']:before{background:#fac9b6}.layer-key>span[data-layer='logic']:before{background:#ff7759}.layer-key>span[data-layer='content']:before{background:#c96c56}.layer-key>span[data-layer='infrastructure']:before{background:#8b7d82}
+.layer-key>span.active{border-color:#ff775965;background:#ff77590a;color:#f7ece9}
+.business-cta{display:inline-flex;gap:13px;margin-top:22px;font-size:11px;color:#ffad96;align-items:center}
+.business-cta:hover{color:#ffe1d4}
+.hero .cube-orbit .cubelet[data-layer='interface'] .front{background:#e9ab94}.hero .cube-orbit .cubelet[data-layer='interface'] .top{background:#ffddcc}.hero .cube-orbit .cubelet[data-layer='interface'] .right{background:#a96f5b}
+.hero .cube-orbit .cubelet[data-layer='content'] .front{background:#c96c56}.hero .cube-orbit .cubelet[data-layer='content'] .top{background:#efad95}.hero .cube-orbit .cubelet[data-layer='content'] .right{background:#8f4435}
+.hero .cube-orbit .cubelet[data-layer='infrastructure'] .front{background:#75646b}.hero .cube-orbit .cubelet[data-layer='infrastructure'] .top{background:#ac9397}.hero .cube-orbit .cubelet[data-layer='infrastructure'] .right{background:#433b45}
+.hero .cube-orbit .cubelet.layer-active .face{border-color:#ffebdd;box-shadow:inset 0 0 13px #fff1dc33}
+.project-connection{font-size:10px;line-height:1.5;color:var(--project-accent);margin-top:7px}
+.spatial-services .service .service-outcome{color:#e5c0b4;font-size:12px;margin-top:18px;line-height:1.6}
+.spatial-services .service:not([open]) .service-outcome{display:none}
+@media(max-width:760px){
+  .hero .scene-stage,.hero .scene-dial,.hero .visual-label{display:none}
+  .hero .visual-caption{left:0;right:0;bottom:2%;text-align:center;font-size:9px}
+  .hero-echo h2{font-size:clamp(35px,9vw,61px)}
+  .hero-echo .business-explanation{font-size:12px;line-height:1.7;max-width:300px;min-height:62px;margin-top:18px}
+  .hero-echo .small-label{font-size:7px;max-width:300px;margin-bottom:18px}
+  .layer-key{max-width:325px;gap:6px;margin-top:12px}
+  .layer-key>span{font-size:7px;padding:6px 7px;gap:5px}
+  .business-cta{margin-top:15px;font-size:10px}
+  .project-connection{font-size:8px;max-width:260px;margin-top:6px}
+}
+@media(max-width:760px) and (max-height:740px){
+  .hero-echo h2{font-size:clamp(31px,8.7vw,39px)}
+  .hero-echo .business-explanation{font-size:10px;line-height:1.6;min-height:48px;max-width:270px;margin-top:12px}
+  .hero-echo .small-label{font-size:7px;margin-bottom:12px}
+  .layer-key{margin-top:9px;max-width:280px;gap:5px}
+  .layer-key>span{font-size:6px;padding:5px 6px}
+  .business-cta{font-size:9px;margin-top:12px}
+}
+@media(max-height:540px) and (min-width:600px){
+  .hero-echo h2{font-size:30px}
+  .hero-echo .small-label{font-size:7px;margin-bottom:10px}
+  .hero-echo .business-explanation{font-size:10px;line-height:1.55;max-width:300px;min-height:45px;margin-top:12px}
+  .layer-key{margin-top:8px;gap:5px;max-width:350px}
+  .layer-key>span{font-size:6px;padding:5px 6px}
+  .business-cta{font-size:9px;margin-top:12px}
+  .project-connection{font-size:8px}
+}

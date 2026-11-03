@@ -391,7 +391,7 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
 export interface SiteSetting {
   id: number;
   /**
-   * The active visual direction. Switches the whole site between the three designs.
+   * Legacy visual direction for the original theme previews (?theme=editorial, command, or stone). The homepage uses the new studio design.
    */
   theme: 'editorial' | 'command' | 'stone';
   /**

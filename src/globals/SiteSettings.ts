@@ -28,7 +28,7 @@ export const SiteSettings: GlobalConfig = {
               options: THEME_OPTIONS,
               admin: {
                 description:
-                  'The active visual direction. Switches the whole site between the three designs.',
+                  'Legacy visual direction for the original theme previews (?theme=editorial, command, or stone). The homepage uses the new studio design.',
               },
             },
             {

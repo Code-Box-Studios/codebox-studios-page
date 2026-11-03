@@ -1,25 +1,33 @@
 # Code Box Studios — Landing Site
 
-Marketing site for Code Box Studios, built with **Next.js 15 (App Router)** and **Payload CMS 3**,
-so the whole page is editable without touching code. Ships with **three switchable visual
-directions** — you pick the active one in the CMS.
+Marketing site for Code Box Studios, built with **Next.js 15 (App Router)** and **Payload CMS 3**.
+The homepage uses the approved charcoal-and-coral studio design: a 27-block 3D cube explains
+the software layers behind the business, followed by a scroll-driven project showcase.
+
+Business content, projects, uploaded images, navigation, forms, and SEO remain CMS-driven.
+The fixed software-layer narrative and illustrative interface artwork live in the studio components.
+Missing project images are labeled as interface concepts; uploaded images use their CMS captions.
+Reduced motion and the pause controls present projects as a readable list. Content and native mobile
+navigation also work without JavaScript.
+
+The original visual directions remain available as explicit previews:
 
 - **Editorial White** — austere light canvas, monumental type, unframed rows
 - **Command** — deep-green / navy bands, a code console hero, high contrast
 - **Modular Stone** — warm stone surfaces, navy accents, a building-block bento grid
 
-The content is identical across all three; only the visual treatment changes.
+The original previews share the same CMS content.
 
 ## Stack
 
-| Concern       | Choice                                             |
-| ------------- | -------------------------------------------------- |
-| Framework     | Next.js 15.4 (App Router, React Server Components)  |
-| CMS / backend | Payload CMS 3.86 (embedded in Next.js)             |
+| Concern       | Choice                                                   |
+| ------------- | -------------------------------------------------------- |
+| Framework     | Next.js 15.4 (App Router, React Server Components)       |
+| CMS / backend | Payload CMS 3.86 (embedded in Next.js)                   |
 | Database      | Postgres (`@payloadcms/db-postgres`) — every environment |
-| Styling       | Tailwind CSS v4 with design-token CSS variables    |
-| UI primitives | Radix UI (shadcn-style components), lucide icons   |
-| Language      | TypeScript                                         |
+| Styling       | Tailwind CSS v4 with design-token CSS variables          |
+| UI primitives | Radix UI (shadcn-style components), lucide icons         |
+| Language      | TypeScript                                               |
 
 ## Getting started
 
@@ -45,10 +53,10 @@ The seed creates an admin user (override with `SEED_ADMIN_EMAIL` / `SEED_ADMIN_P
 admin@codeboxstudios.com / changeme-123   ← change this after first login
 ```
 
-## Switching the theme
+## Studio design and original theme previews
 
-In the admin, open **Site Settings → Brand & Theme → Theme** and choose a direction. The whole
-site re-renders in that style on next load.
+The homepage always uses the approved studio design. The theme field in **Site Settings → Brand &
+Theme** now describes the original preview directions; it does not replace the studio homepage.
 
 To preview a direction without changing the saved setting, append `?theme=` to any URL:
 
@@ -73,7 +81,11 @@ Two inboxes capture form submissions:
 > Email delivery is not configured — submissions are stored in the CMS. To also send emails, add a
 > Payload [email adapter](https://payloadcms.com/docs/email/overview).
 
-## How theming works
+## How styling works
+
+Studio styles are scoped to `.studio-site`. The 3D scene math is separate from the React lifecycle
+so cube geometry, camera angles, project counts, and viewport fitting can be tested directly.
+Client components clean up animation frames, resize observers, and event listeners on navigation.
 
 Semantic design tokens are declared once in [`globals.css`](<src/app/(frontend)/globals.css>) and
 remapped per direction under `[data-theme="…"]`. Tailwind utilities (`bg-surface`, `text-ink`,
@@ -93,6 +105,7 @@ src/
   collections/           Users, Media, ContactSubmissions, Subscribers
   globals/               SiteSettings, LandingContent
   components/
+    studio/              CMS-driven studio layout, React scroll scenes, motion math, scoped styles
     chrome/              announcement, header, footer, newsletter form
     sections/            one folder/file per section (hero/services/capabilities have variants)
     ui/                  button, select, accordion, input, textarea, label, arrow-link
@@ -100,6 +113,20 @@ src/
   lib/                   data access, theme constants, fonts, media + cn helpers
   seed/                  idempotent seed (content + admin user)
 ```
+
+## Verification
+
+```bash
+npm test
+npx tsc --noEmit
+npx eslint src/components/studio tests
+npm run build
+npm start
+```
+
+Stop the development server before building: `next dev` and `next build` use the same `.next`
+directory. Keep the existing `.env` and Docker volumes when restarting an existing checkout.
+Do not rerun the content seed against edited globals: it replaces their content.
 
 ## Database
 

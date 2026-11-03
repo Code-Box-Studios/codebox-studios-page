@@ -13,7 +13,8 @@ import { Services } from '@/components/sections/services'
 import { Testimonials } from '@/components/sections/testimonials'
 import { Trust } from '@/components/sections/trust'
 import { getLandingContent, getSiteSettings } from '@/lib/data'
-import { resolveTheme, THEMES, type Theme } from '@/lib/theme'
+import { THEMES, type Theme } from '@/lib/theme'
+import { StudioLanding } from '@/components/studio/studio-landing'
 
 export default async function HomePage({
   searchParams,
@@ -25,13 +26,13 @@ export default async function HomePage({
     getLandingContent(),
     searchParams,
   ])
-  // `?theme=` previews a direction without changing the saved setting; an
-  // unknown value falls back to the admin-configured theme (not the default).
+  // The approved studio experience is the homepage. Explicit valid theme
+  // queries retain access to the three original visual directions.
   const preview = params.theme
-  const theme: Theme =
-    preview && THEMES.includes(preview as Theme)
-      ? (preview as Theme)
-      : resolveTheme(settings.theme)
+  if (!preview || !THEMES.includes(preview as Theme)) {
+    return <StudioLanding settings={settings} content={content} />
+  }
+  const theme = preview as Theme
 
   return (
     <div id="top" data-theme={theme} className="min-h-screen bg-surface">

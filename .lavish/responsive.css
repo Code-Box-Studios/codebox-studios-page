@@ -1,0 +1,115 @@
+/* Keep pinned scenes within the actual viewport, including short devices. */
+.hero{min-height:0}
+.journey-sticky{min-height:0}
+.project-scene{top:50%}
+.motion-toggle{top:7px;right:12px;bottom:auto;left:auto}
+@media(max-width:420px){.preview-bar{justify-content:flex-start;padding-left:20px}.preview-bar>span{display:none}}
+@media(max-width:760px){
+  .journey-prev,.journey-next{width:44px;height:44px;flex:none}
+  .journey-dot{width:38px;min-height:44px;align-content:center}
+  .journey-dots{gap:6px}
+  .journey-mode{display:none}
+  .journey-controls{width:100%;justify-content:space-between;gap:9px}
+  .journey-navigation{display:block}
+}
+@media(max-width:760px) and (max-height:740px){
+  .hero .wrap{padding-top:125px}
+  .hero-eyebrow{margin-bottom:18px}
+  .hero h1,.hero-echo h2{font-size:clamp(33px,9.8vw,44px)}
+  .hero-body{font-size:11px;line-height:1.65;margin-top:18px}
+  .hero-actions{margin-top:20px;gap:20px}
+  .hero-actions .pill{padding:11px 16px}
+  .hero .hero-visual{top:63%;height:35%}
+  .hero .cube-orbit{scale:.55}
+  .hero .visual-label,.hero .scene-stage,.hero .scene-note,.hero .visual-caption,.hero .scene-dial,.hero>.wrap.hero-bottom{display:none}
+  .hero-echo{top:125px}
+  .journey-heading{padding-top:22px}
+  .journey-heading h2{font-size:clamp(25px,7.7vw,31px);margin-top:9px}
+  .journey-heading p{font-size:9px;line-height:1.5;padding-top:10px}
+  .journey-heading p>span{font-size:7px;max-width:155px}
+  .journey-tour{font-size:7px;max-width:112px;padding:7px 9px}
+  .project-scene .project-art{height:clamp(130px,33svh,215px)}
+  .project-scene .project-art .mockup{scale:.55}
+  .project-scene .design-system{scale:.53}
+  .project-scene .project-caption h3{font-size:17px}
+  .project-scene .project-caption{margin-top:11px;min-height:45px}
+  .journey-footer{padding-bottom:18px}
+  .project-story{min-height:65px}
+  .project-name{font-size:17px}
+  .project-description{font-size:9px;line-height:1.5}
+  .journey-navigation{margin-top:8px}
+}
+@media(max-width:760px) and (max-height:600px){
+  .hero .wrap{padding-top:115px}
+  .hero h1,.hero-echo h2{font-size:clamp(31px,9.6vw,38px)}
+  .hero-body{font-size:10px;line-height:1.6;margin-top:14px}
+  .hero-actions{margin-top:16px;gap:16px}
+  .hero .hero-visual{top:68%;height:28%}
+  .hero .cube-orbit{scale:.44}
+  .hero-echo{top:115px}
+}
+@media(max-width:360px){
+  .header-cta>a{display:none}
+  .header-inner{gap:15px}
+  .brand{font-size:14px}
+  .hero-actions .text-link{font-size:9px;gap:7px}
+  .contact .section-title{font-size:49px}
+  .contact-bottom .email{font-size:12px;gap:8px}
+}
+@media(max-height:540px) and (min-width:600px){
+  .header-inner{height:66px}
+  .header nav{gap:20px;font-size:11px}
+  .hero .wrap{padding-top:80px}
+  .hero .hero-copy{width:56%}
+  .hero-eyebrow{display:none}
+  .hero h1,.hero-echo h2{font-size:clamp(30px,4.3vw,44px)}
+  .hero-body{font-size:10px;line-height:1.5;margin-top:12px;max-width:300px}
+  .hero-actions{margin-top:14px;gap:20px}
+  .hero-actions .pill{padding:9px 16px;font-size:10px}
+  .hero-actions .text-link{font-size:9px}
+  .hero .hero-visual{left:55%;top:9%;width:45%;height:86%}
+  .hero .cube-orbit{scale:.6}
+  .hero .orbital-system{scale:.7}
+  .hero .visual-label,.hero .scene-stage,.hero .scene-note,.hero .visual-caption,.hero .scene-dial,.hero>.wrap.hero-bottom{display:none}
+  .hero-echo{top:80px;width:55%}
+  .hero-echo .small-label{font-size:8px;margin-bottom:14px}
+  .hero-echo p{font-size:11px;margin-top:18px}
+  .journey-heading{position:absolute;left:24px;top:20px;width:32%;padding:0;margin:0;display:block}
+  .journey-heading h2{font-size:clamp(23px,3.2vw,30px);margin-top:10px}
+  .journey-heading p{padding-top:10px;text-align:left;font-size:9px;line-height:1.5}
+  .journey-heading p>span{display:none}
+  .journey-tour{font-size:8px;padding:7px 10px;margin:8px 0 0;position:static;max-width:none}
+  .project-viewport{position:absolute;inset:0 0 0 auto;width:63%;height:100%;margin:0}
+  .project-scene{width:calc(100% - 32px);top:50%}
+  .project-scene .project-art{height:min(51svh,230px)}
+  .project-scene .project-art .mockup{scale:.62}
+  .project-scene .design-system{scale:.56}
+  .project-scene .project-caption h3{font-size:17px;max-width:none}
+  .project-scene .project-caption{margin-top:11px;min-height:44px}
+  .project-scene .concept-tag{font-size:6px;left:10px;top:10px}
+  .scene-topline{font-size:6px}
+  .journey-footer{position:absolute;left:24px;bottom:20px;width:32%;padding:0;margin:0;display:block}
+  .project-story{min-height:0}
+  .project-category{font-size:7px}
+  .project-name{font-size:18px;margin:7px 0}
+  .project-description{font-size:9px;line-height:1.5}
+  .journey-navigation{margin-top:10px;display:block;text-align:left}
+  .journey-mode,.journey-hint{display:none}
+  .journey-controls{gap:8px;justify-content:space-between;width:100%}
+  .journey-prev,.journey-next{width:34px;height:34px;flex:none}
+  .journey-dots{gap:5px}
+  .journey-dot{width:23px;min-height:34px;font-size:7px}
+}
+@media(max-height:430px) and (min-width:600px){
+  .project-description{display:none}
+  .hero .hero-copy{width:56%}
+  .hero h1,.hero-echo h2{font-size:36px}
+}
+@media(prefers-reduced-motion:reduce){
+  .project-viewport{position:relative;inset:auto;width:100%;height:auto}
+  .journey-heading{position:relative;inset:auto;width:min(1376px,calc(100% - 40px));padding:30px 0;margin-inline:auto}
+  .project-scene{top:auto}
+}
+.motion-paused .project-viewport{position:relative;inset:auto;width:100%;height:auto}
+.motion-paused .journey-heading{position:relative;inset:auto;width:min(1376px,calc(100% - 40px));padding:30px 0;margin-inline:auto}
+.motion-paused .project-scene{top:auto}
