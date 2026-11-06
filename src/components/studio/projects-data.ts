@@ -4,6 +4,17 @@ import type { ProjectKind } from './project-art'
 
 export type PortfolioItem = NonNullable<NonNullable<LandingContent['portfolio']>['items']>[number]
 
+const productPreviews: Record<string, { url: string; alt: string }> = {
+  tally: {
+    url: '/projects/tally.png',
+    alt: 'Tally landing page with an illustrative repayment preview',
+  },
+  'motorpool management system': {
+    url: '/projects/motorpool-management-system.png',
+    alt: 'Motorpool Management System sign-in screen',
+  },
+}
+
 const concepts: Record<
   string,
   {
@@ -55,7 +66,10 @@ const concepts: Record<
 }
 
 export function resolveProject(item: PortfolioItem) {
-  const image = asMedia(item.image)
+  const uploadedImage = asMedia(item.image)
+  const image = uploadedImage?.url
+    ? uploadedImage
+    : productPreviews[item.title.trim().toLowerCase()] || null
   const concept = !image?.url ? concepts[item.title.trim().toLowerCase()] : undefined
   return {
     ...item,

@@ -14,6 +14,9 @@ const nextConfig: NextConfig = {
       {
         pathname: '/api/media/file/**',
       },
+      {
+        pathname: '/projects/*.png',
+      },
     ],
     // Allow SVG uploads (e.g. client logos) through next/image, hardened so
     // an SVG can't execute script or be rendered inline as a document.

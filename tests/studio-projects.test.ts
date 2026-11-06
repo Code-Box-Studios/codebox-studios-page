@@ -43,7 +43,7 @@ test('arbitrary CMS projects retain their name, tag, and note', () => {
   assert.equal(result.category, 'Custom systems')
 })
 
-test('real products without screenshots are not labeled as illustrative concepts', () => {
+test('real products use their own previews when no CMS screenshot is supplied', () => {
   for (const title of ['Tally', 'Motorpool Management System']) {
     const result = resolveProject({
       title,
@@ -51,7 +51,25 @@ test('real products without screenshots are not labeled as illustrative concepts
       note: 'Built by Code Box Studios.',
     })
     assert.equal(result.concept, false, `${title} should remain a real project`)
+    assert.ok(result.image?.url, `${title} should show its own product preview`)
     assert.equal(result.line, title)
     assert.equal(result.body, 'Built by Code Box Studios.')
   }
+})
+
+test('a CMS screenshot takes precedence over a built-in product preview', () => {
+  const result = resolveProject({
+    title: 'Tally',
+    tag: 'Personal finance',
+    image: {
+      id: 2,
+      alt: 'An updated Tally screenshot',
+      url: '/api/media/file/updated-tally.png',
+      createdAt: '2026-11-07T00:00:00Z',
+      updatedAt: '2026-11-07T00:00:00Z',
+    },
+  })
+  assert.equal(result.image?.url, '/api/media/file/updated-tally.png')
+  assert.equal(result.image?.alt, 'An updated Tally screenshot')
+  assert.equal(result.concept, false)
 })
