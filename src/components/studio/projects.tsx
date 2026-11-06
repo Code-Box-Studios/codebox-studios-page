@@ -260,7 +260,10 @@ export function ProjectJourney({ data }: { data: NonNullable<LandingContent['por
                     />
                   ) : (
                     <>
-                      <span className="concept-tag">Interface concept / {project.tag}</span>
+                      <span className="concept-tag">
+                        {project.concept ? 'Interface concept' : 'Product illustration'} /{' '}
+                        {project.tag}
+                      </span>
                       <ProjectArt kind={project.kind} />
                     </>
                   )}

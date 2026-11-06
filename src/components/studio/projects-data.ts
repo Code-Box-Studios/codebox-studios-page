@@ -60,7 +60,7 @@ export function resolveProject(item: PortfolioItem) {
   return {
     ...item,
     image: image?.url ? image : null,
-    concept: !image?.url,
+    concept: Boolean(concept),
     line: concept?.line || item.title,
     body: [concept?.body, item.note].filter(Boolean).join(' '),
     category: concept ? `Business need / ${concept.need}` : item.tag,

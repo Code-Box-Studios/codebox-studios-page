@@ -42,3 +42,16 @@ test('arbitrary CMS projects retain their name, tag, and note', () => {
   assert.equal(result.body, 'A bespoke description.')
   assert.equal(result.category, 'Custom systems')
 })
+
+test('real products without screenshots are not labeled as illustrative concepts', () => {
+  for (const title of ['Tally', 'Motorpool Management System']) {
+    const result = resolveProject({
+      title,
+      tag: 'Software product',
+      note: 'Built by Code Box Studios.',
+    })
+    assert.equal(result.concept, false, `${title} should remain a real project`)
+    assert.equal(result.line, title)
+    assert.equal(result.body, 'Built by Code Box Studios.')
+  }
+})
