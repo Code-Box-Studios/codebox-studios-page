@@ -10,7 +10,7 @@ import { resolveProject } from './projects-data'
 
 export function ProjectJourney({ data }: { data: NonNullable<LandingContent['portfolio']> }) {
   const projects = useMemo(() => (data.items ?? []).map(resolveProject), [data.items])
-  const { enabled } = useStudioMotion()
+  const { enabled, compact } = useStudioMotion()
   const [short, setShort] = useState(false)
   const [active, setActive] = useState(0)
   const [touring, setTouring] = useState(false)
@@ -18,7 +18,7 @@ export function ProjectJourney({ data }: { data: NonNullable<LandingContent['por
   const viewport = useRef<HTMLDivElement>(null)
   const scenes = useRef<(HTMLElement | null)[]>([])
   const tour = useRef(0)
-  const animated = enabled && !short && projects.length > 1
+  const animated = enabled && !compact && !short && projects.length > 1
   const stopTour = useCallback(() => {
     cancelAnimationFrame(tour.current)
     tour.current = 0
@@ -38,6 +38,18 @@ export function ProjectJourney({ data }: { data: NonNullable<LandingContent['por
     const element = section.current,
       stage = viewport.current
     if (!element || !stage || !projects.length) return
+    if (!animated) {
+      scenes.current.forEach((scene) => {
+        if (!scene) return
+        scene.style.transform = 'none'
+        scene.style.opacity = '1'
+        scene.style.removeProperty('z-index')
+        scene.style.setProperty('--screen-drift', '0px')
+        scene.style.setProperty('--component-gap', '0px')
+        scene.style.setProperty('--screen-reveal', '1')
+      })
+      return
+    }
     let frame = 0
     let last = -1
     let disposed = false
@@ -92,6 +104,7 @@ export function ProjectJourney({ data }: { data: NonNullable<LandingContent['por
   }, [animated, projects.length, stopTour])
 
   useEffect(() => {
+    if (!animated) return
     const key = (event: KeyboardEvent) => {
       if (
         event.key === ' ' &&
@@ -133,7 +146,7 @@ export function ProjectJourney({ data }: { data: NonNullable<LandingContent['por
       document.removeEventListener('click', click, true)
       document.removeEventListener('visibilitychange', visibility)
     }
-  }, [stopTour])
+  }, [animated, stopTour])
 
   function goTo(index: number) {
     stopTour()

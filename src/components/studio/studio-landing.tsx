@@ -17,6 +17,7 @@ import {
   Trust,
 } from './sections'
 import './production.css'
+import './mobile.css'
 
 export function StudioLanding({
   settings,

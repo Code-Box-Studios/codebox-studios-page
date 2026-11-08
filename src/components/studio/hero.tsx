@@ -4,8 +4,24 @@ import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import type { LandingContent } from '@/payload-types'
 import { clamp, cubeBlocks, cubeBlockPose, cubeCamera, layers } from './motion'
 import { useStudioMotion } from './motion-provider'
+import { MobileHero } from './mobile-hero'
+import { compactMotionQuery } from './mobile-motion'
 
 export function StudioHero({ data }: { data: NonNullable<LandingContent['hero']> }) {
+  const { compact } = useStudioMotion()
+  return (
+    <>
+      {!compact && (
+        <div className="desktop-hero">
+          <DesktopHero data={data} />
+        </div>
+      )}
+      <MobileHero data={data} />
+    </>
+  )
+}
+
+function DesktopHero({ data }: { data: NonNullable<LandingContent['hero']> }) {
   const { enabled } = useStudioMotion()
   const track = useRef<HTMLElement>(null)
   const cube = useRef<HTMLDivElement>(null)
@@ -15,6 +31,7 @@ export function StudioHero({ data }: { data: NonNullable<LandingContent['hero']>
   const [story, setStory] = useState({ index: 0, layer: 0, visible: false })
 
   useEffect(() => {
+    if (matchMedia(compactMotionQuery).matches) return
     const section = track.current
     const model = cube.current
     const surface = canvas.current

@@ -13,8 +13,9 @@ import {
 import { Pause, Play } from 'lucide-react'
 
 import { clamp } from './motion'
+import { compactMotionQuery } from './mobile-motion'
 
-const MotionContext = createContext({ enabled: false, toggle: () => {} })
+const MotionContext = createContext({ enabled: false, compact: false, toggle: () => {} })
 export const useStudioMotion = () => useContext(MotionContext)
 
 export function MotionControl({ compact = false }: { compact?: boolean }) {
@@ -43,20 +44,31 @@ export function StudioMotion({
   const [ready, setReady] = useState(false)
   const [reduced, setReduced] = useState(true)
   const [override, setOverride] = useState<boolean | null>(null)
+  const [compact, setCompact] = useState(false)
   const enabled = ready && (override ?? !reduced)
   const root = useRef<HTMLDivElement>(null)
-  const value = useMemo(() => ({ enabled, toggle: () => setOverride(!enabled) }), [enabled])
+  const value = useMemo(
+    () => ({ enabled, compact, toggle: () => setOverride(!enabled) }),
+    [enabled, compact],
+  )
 
   useEffect(() => {
     const query = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const phone = window.matchMedia(compactMotionQuery)
+    const resize = () => setCompact(phone.matches)
     const change = () => {
       setReduced(query.matches)
       setOverride(null)
     }
     change()
+    resize()
     setReady(true)
     query.addEventListener('change', change)
-    return () => query.removeEventListener('change', change)
+    phone.addEventListener('change', resize)
+    return () => {
+      query.removeEventListener('change', change)
+      phone.removeEventListener('change', resize)
+    }
   }, [])
 
   useEffect(() => {
@@ -70,6 +82,22 @@ export function StudioMotion({
     const chapters = [...element.querySelectorAll<HTMLAnchorElement>('.chapter-rail a')]
     const marquee = element.querySelector<HTMLElement>('.kinetic-banner')
     const words = [...element.querySelectorAll<HTMLElement>('.about .word')]
+    if (compact || matchMedia(compactMotionQuery).matches) {
+      reveals.forEach((node) => node.classList.add('in'))
+      words.forEach((node) => node.classList.add('read'))
+      services.forEach((shell) => {
+        const target = shell.firstElementChild as HTMLElement | null
+        if (target) target.style.transform = 'none'
+      })
+      const bar = element.querySelector<HTMLElement>('.studio-announcement')
+      const measureBar = () =>
+        element.style.setProperty('--announcement-offset', `${bar?.offsetHeight ?? 0}px`)
+      const barResize = new ResizeObserver(measureBar)
+      if (bar) barResize.observe(bar)
+      measureBar()
+      // Mobile uses normal document flow; no page-wide scroll/parallax loop.
+      return () => barResize.disconnect()
+    }
     const observer = new IntersectionObserver(
       (entries) =>
         entries.forEach((entry) => {
@@ -158,7 +186,7 @@ export function StudioMotion({
       window.removeEventListener('scroll', schedule)
       window.removeEventListener('resize', schedule)
     }
-  }, [enabled])
+  }, [enabled, compact])
 
   return (
     <MotionContext.Provider value={value}>
