@@ -37,7 +37,7 @@ function DesktopHero({ data }: { data: NonNullable<LandingContent['hero']> }) {
     if (distance <= 0) return []
     const top = element.getBoundingClientRect().top + scrollY
     // The four middle stops keep each software-layer explanation in view.
-    return [0, 0.395, 0.505, 0.615, 0.725, 1].map((progress) => top + progress * distance)
+    return [0, ...[0.395, 0.505, 0.615, 0.725, 1].map((progress) => top + progress * distance)]
   }, [])
   useSceneScroll(enabled, track, getStops)
 

@@ -3,12 +3,12 @@ import { test } from 'node:test'
 import { cubeBlocks } from '../src/components/studio/motion'
 import { mobileStoryFrame, mobileCubeBlockPose } from '../src/components/studio/mobile-motion'
 
-test('mobile chapters hold the cube still while their copy is read', () => {
+test('mobile pose follows the eased scene movement without a second compressed transition', () => {
   assert.equal(mobileStoryFrame(-1).pose, 0)
-  assert.equal(mobileStoryFrame(0.1).pose, 0)
-  assert.equal(mobileStoryFrame(0.4).pose, 0.5)
-  assert.equal(mobileStoryFrame(0.6).pose, 0.5)
-  assert.equal(mobileStoryFrame(0.9).pose, 1)
+  assert.equal(mobileStoryFrame(0.1).pose, 0.1)
+  assert.equal(mobileStoryFrame(0.4).pose, 0.4)
+  assert.equal(mobileStoryFrame(0.6).pose, 0.6)
+  assert.equal(mobileStoryFrame(0.9).pose, 0.9)
   assert.equal(mobileStoryFrame(2).pose, 1)
   assert.deepEqual(
     [0, 0.5, 1].map((p) => mobileStoryFrame(p).chapter),

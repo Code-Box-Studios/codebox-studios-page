@@ -42,21 +42,19 @@ export function readingSceneStops(
   return stops
 }
 
-export function nextSceneStop(
+export function sceneTarget(
   position: number,
-  from: number,
+  direction: number,
   stops: readonly number[],
   viewportHeight: number,
 ) {
-  if (stops.length < 2 || Math.abs(position - from) < 12) return null
-  const direction = Math.sign(position - from)
+  if (stops.length < 2 || !direction) return null
   const first = stops[0],
     last = stops[stops.length - 1]
   const approach = Math.min(180, viewportHeight * 0.35)
   if (position < first - approach || position > last + approach) return null
   if ((position < first && direction < 0) || (position > last && direction > 0)) return null
-  if (stops.some((stop) => Math.abs(stop - position) <= 12)) return null
   return direction > 0
-    ? (stops.find((stop) => stop > position) ?? null)
-    : ([...stops].reverse().find((stop) => stop < position) ?? null)
+    ? (stops.find((stop) => stop > position + 12) ?? null)
+    : ([...stops].reverse().find((stop) => stop < position - 12) ?? null)
 }

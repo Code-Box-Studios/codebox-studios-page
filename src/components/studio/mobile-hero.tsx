@@ -32,6 +32,7 @@ const layerSummaries = {
 
 export function MobileHero({ data }: { data: NonNullable<LandingContent['hero']> }) {
   const { enabled, compact } = useStudioMotion()
+  const gestureRoot = useRef<HTMLElement>(null)
   const track = useRef<HTMLDivElement>(null)
   const stage = useRef<HTMLDivElement>(null)
   const model = useRef<HTMLDivElement>(null)
@@ -45,9 +46,9 @@ export function MobileHero({ data }: { data: NonNullable<LandingContent['hero']>
       top: node.getBoundingClientRect().top + scrollY,
       height: node.offsetHeight,
     }))
-    return readingSceneStops(copy, readingLine, innerHeight - readingLine - 24)
+    return [0, ...readingSceneStops(copy, readingLine, innerHeight - readingLine - 24)]
   }, [])
-  useSceneScroll(enabled && compact, track, getStops)
+  useSceneScroll(enabled && compact, gestureRoot, getStops)
 
   useEffect(() => {
     const element = track.current
@@ -127,7 +128,7 @@ export function MobileHero({ data }: { data: NonNullable<LandingContent['hero']>
   }, [compact, enabled])
 
   return (
-    <section className="mobile-hero" aria-label="Introduction">
+    <section className="mobile-hero" ref={gestureRoot} aria-label="Introduction">
       <div className="mobile-intro wrap">
         <p className="small-label mono">
           <span className="dot" />

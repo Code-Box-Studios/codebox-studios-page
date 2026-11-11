@@ -3,7 +3,7 @@ import { test } from 'node:test'
 import {
   sceneProgress,
   readingSceneStops,
-  nextSceneStop,
+  sceneTarget,
 } from '../src/components/studio/scroll-scenes'
 
 test('each chapter aligns its own complete cube view even when chapter heights differ', () => {
@@ -42,23 +42,25 @@ test('extra reading stops keep the current cube view complete until its copy has
   assert.equal(sceneProgress(820, [40, 220, 820], [40, 420, 820]), 1)
 })
 
-test('a deliberate scroll settles in its direction instead of snapping backward', () => {
+test('a gesture selects the next complete view before the browser moves', () => {
   const stops = [100, 400, 1100]
-  assert.equal(nextSceneStop(150, 100, stops, 800), 400)
-  assert.equal(nextSceneStop(350, 400, stops, 800), 100)
-  assert.equal(nextSceneStop(470, 400, stops, 800), 1100)
-  assert.equal(nextSceneStop(1050, 1100, stops, 800), 400)
+  assert.equal(sceneTarget(100, 1, stops, 800), 400)
+  assert.equal(sceneTarget(400, -1, stops, 800), 100)
+  assert.equal(sceneTarget(400, 1, stops, 800), 1100)
+  assert.equal(sceneTarget(1100, -1, stops, 800), 400)
+  assert.equal(sceneTarget(394, 1, stops, 800), 1100)
 })
 
-test('settling leaves ordinary content, completed views, and tiny movements alone', () => {
+test('scene gestures release scrolling at the edges and leave ordinary content alone', () => {
   const stops = [100, 400, 1100]
-  assert.equal(nextSceneStop(108, 100, stops, 800), null)
-  assert.equal(nextSceneStop(394, 100, stops, 800), null)
-  assert.equal(nextSceneStop(80, 100, stops, 800), null)
-  assert.equal(nextSceneStop(1150, 1100, stops, 800), null)
-  assert.equal(nextSceneStop(5000, 4800, stops, 800), null)
-  assert.equal(nextSceneStop(-200, -300, stops, 800), null)
-  assert.equal(nextSceneStop(200, 100, [], 800), null)
-  assert.equal(nextSceneStop(80, 0, stops, 800), 100)
-  assert.equal(nextSceneStop(1150, 1400, stops, 800), 1100)
+  assert.equal(sceneTarget(100, -1, stops, 800), null)
+  assert.equal(sceneTarget(1100, 1, stops, 800), null)
+  assert.equal(sceneTarget(80, -1, stops, 800), null)
+  assert.equal(sceneTarget(1150, 1, stops, 800), null)
+  assert.equal(sceneTarget(5000, 1, stops, 800), null)
+  assert.equal(sceneTarget(-200, 1, stops, 800), null)
+  assert.equal(sceneTarget(200, 1, [], 800), null)
+  assert.equal(sceneTarget(80, 1, stops, 800), 100)
+  assert.equal(sceneTarget(1150, -1, stops, 800), 1100)
+  assert.equal(sceneTarget(400, 0, stops, 800), null)
 })
