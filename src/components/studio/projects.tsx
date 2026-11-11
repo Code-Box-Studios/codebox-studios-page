@@ -1,12 +1,14 @@
 'use client'
 
 import Image from 'next/image'
+import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
 import type { LandingContent } from '@/payload-types'
 import { clamp, fitScene, projectFrame } from './motion'
 import { useStudioMotion, MotionControl } from './motion-provider'
 import { ProjectArt } from './project-art'
 import { resolveProject } from './projects-data'
+import { useSceneScroll } from './use-scene-scroll'
 
 export function ProjectJourney({ data }: { data: NonNullable<LandingContent['portfolio']> }) {
   const projects = useMemo(() => (data.items ?? []).map(resolveProject), [data.items])
@@ -19,6 +21,17 @@ export function ProjectJourney({ data }: { data: NonNullable<LandingContent['por
   const scenes = useRef<(HTMLElement | null)[]>([])
   const tour = useRef(0)
   const animated = enabled && !compact && !short && projects.length > 1
+  const getStops = useCallback(() => {
+    const element = section.current
+    if (!element || projects.length < 2) return []
+    const distance = element.offsetHeight - innerHeight
+    const top = element.getBoundingClientRect().top + scrollY
+    return Array.from(
+      { length: projects.length },
+      (_, index) => top + (distance * index) / (projects.length - 1),
+    )
+  }, [projects.length])
+  useSceneScroll(animated && !touring, section, getStops)
   const stopTour = useCallback(() => {
     cancelAnimationFrame(tour.current)
     tour.current = 0
@@ -232,7 +245,7 @@ export function ProjectJourney({ data }: { data: NonNullable<LandingContent['por
                 aria-pressed={touring}
                 onClick={toggleTour}
               >
-                {touring ? 'Pause the tour Ⅱ' : 'Explore what we build ↗'}
+                {touring ? 'Pause tour' : 'Explore projects'}
               </button>
               <MotionControl compact />
             </div>
@@ -288,8 +301,12 @@ export function ProjectJourney({ data }: { data: NonNullable<LandingContent['por
                     {project.layers && <p className="project-connection">{project.layers}</p>}
                     <p className="project-body">{project.body}</p>
                   </div>
-                  <a className="arrow" href="#contact" aria-label={`Discuss ${project.title}`}>
-                    ↗
+                  <a
+                    className="project-link"
+                    href="#contact"
+                    aria-label={`Discuss ${project.title}`}
+                  >
+                    Discuss project
                   </a>
                 </div>
               </div>
@@ -315,7 +332,7 @@ export function ProjectJourney({ data }: { data: NonNullable<LandingContent['por
                 disabled={active === 0}
                 onClick={() => goTo(active - 1)}
               >
-                ←
+                <ArrowLeft size={16} strokeWidth={1.5} aria-hidden />
               </button>
               <div className="journey-dots" role="group" aria-label="Choose a project">
                 {projects.map((project, index) => (
@@ -340,10 +357,10 @@ export function ProjectJourney({ data }: { data: NonNullable<LandingContent['por
                 disabled={active === projects.length - 1}
                 onClick={() => goTo(active + 1)}
               >
-                →
+                <ArrowRight size={16} strokeWidth={1.5} aria-hidden />
               </button>
             </div>
-            <span className="journey-hint mono">Scroll to continue ↓</span>
+            <span className="journey-hint mono">Scroll to continue</span>
           </div>
         </div>
       </div>

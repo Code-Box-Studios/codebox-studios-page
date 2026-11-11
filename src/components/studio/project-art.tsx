@@ -44,12 +44,8 @@ export function ProjectArt({ kind }: { kind: ProjectKind }) {
                 <i key={i} />
               ))}
             </div>
-            <div className="demo-cta">
-              Start something <span>↗</span>
-            </div>
-            <div className="demo-input">
-              Your next big idea <span>⌘ K</span>
-            </div>
+            <div className="demo-cta">Start something</div>
+            <div className="demo-input">Your next big idea</div>
             <div className="demo-tags">
               <span>Composable</span>
               <span>Accessible</span>
@@ -66,8 +62,7 @@ export function ProjectArt({ kind }: { kind: ProjectKind }) {
   return (
     <div className={`mockup ${dashboard ? 'dashboard-mock' : ''}`} aria-hidden>
       <div className="mock-top">
-        <span className="mock-brand">{dashboard ? '▧ Clarity' : '▣ Orbit / Workspace'}</span>
-        <span className="mock-dots">•••</span>
+        <span className="mock-brand">{dashboard ? 'Clarity' : 'Orbit / Workspace'}</span>
       </div>
       <div className="mock-layout">
         <div className="mock-sidebar">

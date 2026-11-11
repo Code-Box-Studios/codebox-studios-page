@@ -60,12 +60,7 @@ export function StudioHeader({ settings }: { settings: SiteSetting }) {
           {links}
         </nav>
         <div className="header-cta">
-          <a href="#contact">
-            {settings.ctaLabel || 'Let’s talk'}{' '}
-            <span className="arrow" aria-hidden>
-              ↗
-            </span>
-          </a>
+          <a href="#contact">{settings.ctaLabel || 'Let’s talk'}</a>
           <MotionControl compact />
           <details
             className="mobile-menu"
@@ -78,7 +73,11 @@ export function StudioHeader({ settings }: { settings: SiteSetting }) {
               aria-controls="studio-navigation"
               aria-label={open ? 'Close menu' : 'Open menu'}
             >
-              {open ? <X size={18} /> : <Menu size={18} />}
+              {open ? (
+                <X size={18} strokeWidth={1.5} aria-hidden />
+              ) : (
+                <Menu size={18} strokeWidth={1.5} aria-hidden />
+              )}
             </summary>
             <nav
               id="studio-navigation"

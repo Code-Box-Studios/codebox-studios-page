@@ -1,0 +1,314 @@
+/* A consistent reading scale and section rhythm for the complete mobile page. */
+@media (max-width: 760px), (max-width: 1024px) and (pointer: coarse) {
+  .studio-site .section {
+    padding-block: 56px;
+  }
+  .studio-site :is(.spatial-about, .spatial-contact) > .wrap {
+    transform: none !important;
+  }
+  .studio-site .section-kicker {
+    margin-bottom: 26px;
+    padding-bottom: 16px;
+  }
+  .studio-site .section-kicker .mono {
+    font-size: 9px;
+    line-height: 1.6;
+    letter-spacing: 0.1em;
+  }
+  .studio-site .section-kicker > :nth-child(2) {
+    display: none;
+  }
+  .studio-site .section-title,
+  .studio-site .services-intro .section-title,
+  .studio-site .contact .section-title {
+    font-size: clamp(30px, 8.5vw, 42px);
+    line-height: 1.1;
+    letter-spacing: -0.045em;
+    margin: 0;
+  }
+  .studio-site .heading-row {
+    display: grid;
+    gap: 18px;
+  }
+  .studio-site .heading-row > p,
+  .studio-site .services-intro > p {
+    font-size: 14px;
+    line-height: 1.75;
+    color: #b8b0bb;
+    margin: 16px 0 0;
+  }
+  .studio-site .trust-inner {
+    display: grid;
+    gap: 16px;
+    padding-block: 26px;
+  }
+  .studio-site .trust .logos {
+    justify-content: flex-start;
+    gap: 14px 24px;
+  }
+  .studio-site .trust .logos > span {
+    font-size: 14px;
+  }
+  .studio-site .kinetic-banner {
+    min-height: 0;
+    padding: 24px 20px;
+  }
+  .studio-site .kinetic-row {
+    display: block;
+    width: auto;
+    transform: none;
+  }
+  .studio-site .kinetic-group {
+    display: none;
+  }
+  .studio-site .kinetic-group:first-child {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px 16px;
+  }
+  .studio-site .kinetic-group:first-child > span {
+    font-size: 11px;
+    line-height: 1.6;
+    letter-spacing: 0;
+    color: #d4c9ce;
+    -webkit-text-stroke: 0;
+  }
+  .studio-site .kinetic-group .banner-separator {
+    display: none;
+  }
+  .studio-site .kinetic-sub {
+    font-size: 11px;
+    line-height: 1.7;
+    margin-top: 12px;
+  }
+  .studio-site .services-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 26px;
+  }
+  .studio-site .services-intro .text-link {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    margin-top: 12px;
+    font-size: 12px;
+  }
+  .studio-site .services-list {
+    display: grid;
+    gap: 10px;
+  }
+  .studio-site #services .service {
+    /* Override padding forced by the legacy spatial-card stylesheet. */
+    padding: 20px !important;
+    background: #1a191f;
+    border: 1px solid #ffffff1c;
+    border-radius: 12px;
+    box-shadow: none;
+  }
+  .studio-site #services .service[open] {
+    background: #201b20;
+    border-color: #d88c7450;
+  }
+  .studio-site #services .service-summary {
+    display: grid;
+    grid-template-columns: 22px minmax(0, 1fr) 16px;
+    gap: 12px;
+    min-height: 44px;
+    align-items: center;
+  }
+  .studio-site #services .service-summary h3 {
+    font-size: 17px;
+    line-height: 1.4;
+    letter-spacing: -0.02em;
+  }
+  .studio-site #services .service-num {
+    font-size: 10px;
+    color: #a89aa7;
+  }
+  .studio-site #services .service-plus {
+    width: 16px;
+    height: 16px;
+  }
+  .studio-site #services .service > p {
+    font-size: 14px;
+    line-height: 1.75;
+    margin: 16px 0 0;
+    color: #b8b0bb;
+  }
+  .studio-site #services .service > .service-outcome {
+    font-size: 13px;
+    color: #e5b9a7;
+  }
+  .studio-site .spatial-process .process-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+    margin-top: 28px;
+  }
+  .studio-site .spatial-process .process-card {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    min-height: 0;
+    padding: 22px !important;
+    border: 1px solid #ffffff1c;
+    border-radius: 12px;
+    background: #19181d;
+  }
+  .studio-site .spatial-process .process-card > :is(.mono, h3, p) {
+    grid-column: 1;
+  }
+  .studio-site .spatial-process .process-card > .mono {
+    font-size: 9px;
+  }
+  .studio-site .spatial-process .process-card h3 {
+    font-size: 20px;
+    line-height: 1.2;
+    margin: 12px 0;
+  }
+  .studio-site .spatial-process .process-card p {
+    font-size: 14px;
+    line-height: 1.7;
+  }
+  .studio-site .spatial-process .process-card .geometry {
+    display: none;
+  }
+  .studio-site .capability-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+    margin-top: 28px;
+  }
+  .studio-site .capability-grid article {
+    padding: 0;
+    min-width: 0;
+  }
+  .studio-site .capability-grid h3 {
+    font-size: 17px;
+    line-height: 1.3;
+    margin-block: 18px 10px;
+  }
+  .studio-site .capability-grid p {
+    font-size: 13px;
+    line-height: 1.7;
+  }
+  .studio-site .about {
+    padding-block: 56px;
+    background: #e8d9d0;
+    color: #2c2227;
+  }
+  .studio-site .about-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+  }
+  .studio-site .about-grid h2 {
+    font-size: 34px;
+    line-height: 1.15;
+  }
+  .studio-site .about-grid p {
+    font-size: 15px;
+    line-height: 1.75;
+    color: #5b4a52;
+  }
+  .studio-site .about-stats {
+    gap: 20px;
+    margin-top: 32px;
+  }
+  .studio-site .engagement-grid {
+    gap: 16px;
+    margin-top: 28px;
+  }
+  .studio-site .engagement-card {
+    padding: 24px;
+    border-radius: 12px;
+  }
+  .studio-site .engagement-card h3 {
+    font-size: 23px;
+    line-height: 1.2;
+  }
+  .studio-site .engagement-card > p {
+    font-size: 14px;
+    line-height: 1.7;
+  }
+  .studio-site .engagement-card ul {
+    margin-block: 20px;
+    padding-block: 20px;
+    gap: 12px;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .studio-site .testimonial-grid {
+    gap: 16px;
+  }
+  .studio-site .testimonial-grid figure {
+    padding: 24px;
+    border-radius: 12px;
+  }
+  .studio-site .testimonial-grid blockquote {
+    font-size: 19px;
+    line-height: 1.6;
+  }
+  .studio-site .faq-grid {
+    gap: 24px;
+  }
+  .studio-site .studio-faq summary {
+    min-height: 60px;
+    padding-block: 18px;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+  .studio-site .studio-faq details p {
+    font-size: 14px;
+    line-height: 1.75;
+    padding-right: 22px;
+  }
+  .studio-site .studio-contact-grid {
+    gap: 28px;
+    margin-top: 24px;
+  }
+  .studio-site .contact-information > p {
+    font-size: 14px;
+    line-height: 1.75;
+  }
+  .studio-site .contact-information .email {
+    display: inline-block;
+    font-size: 15px;
+    line-height: 1.7;
+    margin-block: 20px;
+    overflow-wrap: anywhere;
+  }
+  .studio-site .contact-form :is(form, [role='status']) {
+    padding: 22px;
+    border-radius: 12px;
+    background: #19181e;
+  }
+  .studio-site .contact-form label {
+    font-size: 10px;
+    letter-spacing: 0.08em;
+  }
+  .studio-site .contact-form :is(input, [role='combobox']) {
+    min-height: 46px;
+    font-size: 14px;
+  }
+  .studio-site .contact-form textarea {
+    font-size: 14px;
+    min-height: 130px;
+  }
+  .studio-site .contact-form [role='status'] p {
+    color: #f5eeeb;
+  }
+  .studio-site .footer {
+    padding-top: 48px;
+  }
+  .studio-site .studio-footer-top {
+    gap: 28px;
+  }
+  .studio-site .studio-newsletter h2 {
+    font-size: 26px;
+    line-height: 1.2;
+  }
+  .studio-site .footer-columns {
+    gap: 18px;
+  }
+  .studio-site .footer-columns a {
+    font-size: 12px;
+    line-height: 2;
+  }
+}

@@ -1,6 +1,5 @@
 'use client'
 
-import { ArrowRight } from 'lucide-react'
 import { useActionState } from 'react'
 
 import { subscribe } from '@/app/(frontend)/actions'
@@ -20,15 +19,15 @@ export function NewsletterForm({ placeholder }: { placeholder: string }) {
           required
           placeholder={placeholder}
           aria-label="Email address"
-          className="flex-1 bg-transparent text-sm text-white placeholder:text-white/50 focus:outline-none"
+          className="min-w-0 flex-1 bg-transparent text-sm text-white placeholder:text-white/50 focus:outline-none"
         />
         <button
           type="submit"
           disabled={pending}
           aria-label="Subscribe"
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-white text-[#17171c] transition-opacity hover:opacity-90 disabled:opacity-60"
+          className="flex min-h-11 shrink-0 items-center justify-center rounded-md bg-white px-3 text-xs font-medium text-[#17171c] transition-opacity hover:opacity-90 disabled:opacity-60"
         >
-          <ArrowRight className="h-4 w-4" />
+          {pending ? 'Subscribing...' : 'Subscribe'}
         </button>
       </form>
       {state && (

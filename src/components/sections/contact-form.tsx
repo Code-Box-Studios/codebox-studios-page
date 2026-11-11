@@ -1,6 +1,7 @@
 'use client'
 
 import { useActionState } from 'react'
+import { Check } from 'lucide-react'
 
 import { submitContact } from '@/app/(frontend)/actions'
 import { Button } from '@/components/ui/button'
@@ -34,7 +35,7 @@ export function ContactForm({ submitLabel, budgetOptions }: ContactFormProps) {
           aria-hidden
           className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-accent/15 text-2xl text-accent-text"
         >
-          ✓
+          <Check size={22} strokeWidth={1.5} />
         </div>
         <p className="max-w-[280px] text-[17px] text-ink">{state.message}</p>
       </div>

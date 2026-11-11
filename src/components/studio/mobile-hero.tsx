@@ -1,10 +1,12 @@
 'use client'
 
-import { useEffect, useRef, useState, type CSSProperties } from 'react'
+import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react'
 import type { LandingContent } from '@/payload-types'
 import { cubeBlocks, layers } from './motion'
 import { mobileCubeBlockPose, mobileStoryFrame } from './mobile-motion'
 import { MotionControl, useStudioMotion } from './motion-provider'
+import { readingSceneStops, sceneProgress } from './scroll-scenes'
+import { useSceneScroll } from './use-scene-scroll'
 
 const chapters = [
   {
@@ -16,10 +18,17 @@ const chapters = [
     body: 'The cube opens to show the parts behind your software. Each layer solves a different business need.',
   },
   {
-    title: 'Bring it together.',
-    body: 'One connected product. Easy for people to use, built around your workflow, and ready for your team to grow.',
+    title: 'One connected product.',
+    body: 'A web app, storefront, or internal tool that fits your workflow and grows with your team.',
   },
 ]
+
+const layerSummaries = {
+  interface: 'Clear screens for your customers and staff.',
+  logic: 'Workflows shaped around the way your team works.',
+  content: 'Content and products your team can manage.',
+  infrastructure: 'Reliable data, APIs, and connections behind it all.',
+}
 
 export function MobileHero({ data }: { data: NonNullable<LandingContent['hero']> }) {
   const { enabled, compact } = useStudioMotion()
@@ -27,6 +36,18 @@ export function MobileHero({ data }: { data: NonNullable<LandingContent['hero']>
   const stage = useRef<HTMLDivElement>(null)
   const model = useRef<HTMLDivElement>(null)
   const [chapter, setChapter] = useState(0)
+  const getStops = useCallback(() => {
+    const element = track.current
+    const view = stage.current
+    if (!element || !view || getComputedStyle(view).position !== 'sticky') return []
+    const readingLine = view.offsetHeight + 64
+    const copy = [...element.querySelectorAll<HTMLElement>('.mobile-chapter')].map((node) => ({
+      top: node.getBoundingClientRect().top + scrollY,
+      height: node.offsetHeight,
+    }))
+    return readingSceneStops(copy, readingLine, innerHeight - readingLine - 24)
+  }, [])
+  useSceneScroll(enabled && compact, track, getStops)
 
   useEffect(() => {
     const element = track.current
@@ -36,15 +57,15 @@ export function MobileHero({ data }: { data: NonNullable<LandingContent['hero']>
     const copy = [...element.querySelectorAll<HTMLElement>('.mobile-chapter')]
     let frame = 0
     let visible = false
-    let start = 0
-    let distance = 1
+    let anchors: number[] = []
+    let readingEnds: number[] = []
     let lastPose = -1
     let lastChapter = -1
 
     const paint = () => {
       frame = 0
       if (document.hidden) return
-      const story = mobileStoryFrame(enabled ? (scrollY - start) / distance : 0)
+      const story = mobileStoryFrame(enabled ? sceneProgress(scrollY, anchors, readingEnds) : 0)
       if (lastChapter !== story.chapter) {
         lastChapter = story.chapter
         setChapter(story.chapter)
@@ -62,8 +83,11 @@ export function MobileHero({ data }: { data: NonNullable<LandingContent['hero']>
     }
     const measure = () => {
       const readingLine = (stage.current?.offsetHeight ?? 240) + 64
-      start = copy[0].getBoundingClientRect().top + scrollY - readingLine
-      distance = Math.max(1, copy[2].getBoundingClientRect().top + scrollY - readingLine - start)
+      anchors = copy.map((node) => node.getBoundingClientRect().top + scrollY - readingLine)
+      const available = Math.max(1, innerHeight - readingLine - 24)
+      readingEnds = copy.map(
+        (node, index) => anchors[index] + Math.max(0, node.offsetHeight - available),
+      )
       schedule()
     }
     const visibility = () => {
@@ -109,24 +133,29 @@ export function MobileHero({ data }: { data: NonNullable<LandingContent['hero']>
           <span className="dot" />
           {data.eyebrow}
         </p>
-        <h1>{data.heading || 'Software, built like architecture.'}</h1>
-        <p>{data.body}</p>
-        <div className="mobile-actions">
-          <a className="pill" href="#contact">
-            {data.primaryCtaLabel || 'Start a project'} <span aria-hidden>↗</span>
-          </a>
-          <a className="text-link" href="#process">
-            {data.secondaryCtaLabel || 'See how we work'} <span aria-hidden>↓</span>
-          </a>
-        </div>
+        <h1>
+          {!data.heading || data.heading === 'Software, built like architecture.' ? (
+            <>
+              Software,
+              <br />
+              built like
+              <br />
+              <em>architecture.</em>
+            </>
+          ) : (
+            data.heading
+          )}
+        </h1>
       </div>
       <div className="mobile-story" ref={track}>
         <div className="mobile-cube-stage" ref={stage}>
           <div className="mobile-stage-top mono">
-            <span>YOUR IDEA. BUILT IN LAYERS.</span>
+            <span>THE CODE BOX APPROACH</span>
             <MotionControl compact />
           </div>
           <div className="mobile-cube-view" aria-hidden="true">
+            <div className="mobile-orbit mobile-orbit-one" />
+            <div className="mobile-orbit mobile-orbit-two" />
             <div className="mobile-cube-model" ref={model}>
               {cubeBlocks.map((block) => {
                 const pose = mobileCubeBlockPose(block, 0)
@@ -142,7 +171,9 @@ export function MobileHero({ data }: { data: NonNullable<LandingContent['hero']>
                     }
                   >
                     {['front', 'right', 'top'].map((face) => (
-                      <span className={`mobile-face mobile-${face}`} key={face} />
+                      <span className={`mobile-face mobile-${face}`} key={face}>
+                        {face === 'front' ? '‹' : face === 'right' ? '›' : '/'}
+                      </span>
                     ))}
                   </div>
                 )
@@ -160,15 +191,26 @@ export function MobileHero({ data }: { data: NonNullable<LandingContent['hero']>
         <div className="mobile-chapters wrap">
           {chapters.map((item, index) => (
             <div className="mobile-chapter" key={item.title}>
-              <span className="mobile-chapter-number mono">
-                0{index + 1} / {['THE IDEA', 'THE LAYERS', 'THE PRODUCT'][index]}
-              </span>
-              <h2>{item.title}</h2>
-              <p>{item.body}</p>
+              {index !== 0 && (
+                <span className="mobile-chapter-number mono">
+                  0{index + 1} / {['THE IDEA', 'THE LAYERS', 'THE PRODUCT'][index]}
+                </span>
+              )}
+              <h2 className={index === 0 ? 'sr-only' : undefined}>{item.title}</h2>
+              <p>{index === 0 ? data.body || item.body : item.body}</p>
+              {index === 0 && (
+                <div className="mobile-actions">
+                  <a className="pill" href="#contact">
+                    {data.primaryCtaLabel || 'Start a project'}
+                  </a>
+                  <a className="text-link" href="#process">
+                    {data.secondaryCtaLabel || 'See how we work'}
+                  </a>
+                </div>
+              )}
               {index === 0 && (
                 <p className="mobile-scroll-cue">
-                  {enabled ? 'Scroll to open the cube' : 'Three steps from idea to product'}{' '}
-                  <span aria-hidden>↓</span>
+                  {enabled ? 'Scroll to explore each view' : 'Three steps from idea to product'}
                 </p>
               )}
               {index === 1 && (
@@ -176,14 +218,14 @@ export function MobileHero({ data }: { data: NonNullable<LandingContent['hero']>
                   {layers.map((layer) => (
                     <div key={layer.id} data-layer={layer.id}>
                       <dt>{layer.label}</dt>
-                      <dd>{layer.body}</dd>
+                      <dd>{layerSummaries[layer.id]}</dd>
                     </div>
                   ))}
                 </dl>
               )}
               {index === 2 && (
                 <a className="text-link" href="#work">
-                  See what we build <span aria-hidden>↗</span>
+                  See what we build
                 </a>
               )}
             </div>

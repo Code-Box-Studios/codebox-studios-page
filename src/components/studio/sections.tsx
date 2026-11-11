@@ -1,4 +1,4 @@
-import { Check } from 'lucide-react'
+import { Check, Plus } from 'lucide-react'
 import Image from 'next/image'
 import { Logo } from '@/components/logo'
 import { NewsletterForm } from '@/components/chrome/newsletter-form'
@@ -64,11 +64,11 @@ export function KineticBanner() {
         {[0, 1, 2].map((i) => (
           <span className="kinetic-group" key={i}>
             <span>Web applications.</span>
-            <span className="spark">✳</span>
+            <span className="banner-separator" />
             <span className="outlined">Headless commerce.</span>
-            <span className="spark">✳</span>
+            <span className="banner-separator" />
             <span>Internal tools.</span>
-            <span className="spark">✳</span>
+            <span className="banner-separator" />
           </span>
         ))}
       </div>
@@ -94,10 +94,7 @@ export function Services({ data }: { data: NonNullable<LandingContent['services'
             <h2 className="section-title">{data.heading}</h2>
             {data.intro && <p>{data.intro}</p>}
             <a className="text-link" href="#contact">
-              Find your starting point{' '}
-              <span className="arrow" aria-hidden>
-                ↗
-              </span>
+              Find your starting point
             </a>
           </div>
           <div className="services-list spatial-services">
@@ -108,7 +105,7 @@ export function Services({ data }: { data: NonNullable<LandingContent['services'
                     <span className="service-num">{String(index + 1).padStart(2, '0')}</span>
                     <h3>{item.title}</h3>
                     <span className="service-plus" aria-hidden>
-                      +
+                      <Plus size={16} strokeWidth={1.5} />
                     </span>
                   </summary>
                   {serviceOutcomes[item.title.trim().toLowerCase()] && (
@@ -227,10 +224,7 @@ export function About({ data }: { data: NonNullable<LandingContent['about']> }) 
           <div>
             <p>{data.body}</p>
             <a className="pill" href="#contact">
-              Meet your next build partner{' '}
-              <span className="arrow" aria-hidden>
-                ↗
-              </span>
+              Meet your next build partner
             </a>
           </div>
         </div>
@@ -268,14 +262,13 @@ export function Engagement({ data }: { data: NonNullable<LandingContent['engagem
               <ul>
                 {(plan.features ?? []).map((feature, i) => (
                   <li key={feature.id ?? i}>
-                    <Check size={15} aria-hidden />
+                    <Check size={15} strokeWidth={1.5} aria-hidden />
                     {feature.feature}
                   </li>
                 ))}
               </ul>
               <a className={`pill ${plan.popular ? '' : 'outline'}`} href="#contact">
                 {plan.ctaLabel || 'Let’s talk'}
-                <span aria-hidden>↗</span>
               </a>
             </article>
           ))}
@@ -327,7 +320,9 @@ export function FAQ({ data }: { data: NonNullable<LandingContent['faq']> }) {
               <details key={item.id ?? index} open={index === 0}>
                 <summary>
                   {item.question}
-                  <span aria-hidden>+</span>
+                  <span aria-hidden>
+                    <Plus size={16} strokeWidth={1.5} />
+                  </span>
                 </summary>
                 <p>{item.answer}</p>
               </details>
@@ -353,9 +348,6 @@ export function Contact({ data }: { data: NonNullable<LandingContent['contact']>
             {data.email && (
               <a className="email" href={`mailto:${data.email}`}>
                 {data.email}
-                <span className="arrow" aria-hidden>
-                  ↗
-                </span>
               </a>
             )}
             {data.locationNote && <p className="mono">{data.locationNote}</p>}
@@ -408,7 +400,7 @@ export function Footer({ settings }: { settings: SiteSetting }) {
           <div className="footer-right mono">
             <span>{data.copyright}</span>
             <span>{data.location}</span>
-            <a href="#top">Back to top ↑</a>
+            <a href="#top">Back to top</a>
           </div>
           <MotionControl />
         </div>

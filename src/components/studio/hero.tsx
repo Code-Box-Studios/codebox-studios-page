@@ -1,11 +1,12 @@
 'use client'
 
-import { useEffect, useRef, useState, type CSSProperties } from 'react'
+import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react'
 import type { LandingContent } from '@/payload-types'
 import { clamp, cubeBlocks, cubeBlockPose, cubeCamera, layers } from './motion'
 import { useStudioMotion } from './motion-provider'
 import { MobileHero } from './mobile-hero'
 import { compactMotionQuery } from './mobile-motion'
+import { useSceneScroll } from './use-scene-scroll'
 
 export function StudioHero({ data }: { data: NonNullable<LandingContent['hero']> }) {
   const { compact } = useStudioMotion()
@@ -29,6 +30,16 @@ function DesktopHero({ data }: { data: NonNullable<LandingContent['hero']> }) {
   const canvas = useRef<HTMLCanvasElement>(null)
   const dial = useRef<HTMLSpanElement>(null)
   const [story, setStory] = useState({ index: 0, layer: 0, visible: false })
+  const getStops = useCallback(() => {
+    const element = track.current
+    if (!element || matchMedia(compactMotionQuery).matches) return []
+    const distance = element.offsetHeight - innerHeight
+    if (distance <= 0) return []
+    const top = element.getBoundingClientRect().top + scrollY
+    // The four middle stops keep each software-layer explanation in view.
+    return [0, 0.395, 0.505, 0.615, 0.725, 1].map((progress) => top + progress * distance)
+  }, [])
+  useSceneScroll(enabled, track, getStops)
 
   useEffect(() => {
     if (matchMedia(compactMotionQuery).matches) return
@@ -194,13 +205,9 @@ function DesktopHero({ data }: { data: NonNullable<LandingContent['hero']> }) {
             <div className="hero-actions">
               <a className="pill" href="#contact">
                 {data.primaryCtaLabel || 'Start a project'}
-                <span className="arrow" aria-hidden>
-                  ↗
-                </span>
               </a>
               <a className="text-link" href="#process">
                 {data.secondaryCtaLabel || 'See how we work'}
-                <span aria-hidden>↓</span>
               </a>
             </div>
           </div>
@@ -242,7 +249,7 @@ function DesktopHero({ data }: { data: NonNullable<LandingContent['hero']> }) {
               ))}
             </div>
             <a className="business-cta" href="#work">
-              See what these layers become <span aria-hidden>↓</span>
+              See what these layers become
             </a>
           </div>
         </div>

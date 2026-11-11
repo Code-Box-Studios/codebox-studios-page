@@ -1,0 +1,52 @@
+/* Text actions and consistent functional icons across the studio website. */
+.studio-site :is(.hero-actions, .mobile-actions, .about-grid, .engagement-card) .pill {
+  border-radius: 8px;
+  min-height: 46px;
+  padding: 14px 20px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+.studio-site .project-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 10px 14px;
+  border: 1px solid #ffffff30;
+  border-radius: 6px;
+  color: #f2b69e;
+  font-size: 11px;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+.studio-site .project-link:hover {
+  background: #ffffff08;
+  border-color: #f2b69e80;
+}
+.studio-site .banner-separator {
+  width: 24px;
+  height: 1px;
+  background: currentColor;
+  margin-inline: 14px;
+  flex: none;
+  align-self: center;
+}
+.studio-site :is(.service-plus, .faq-grid summary > span) {
+  display: grid;
+  place-items: center;
+  flex: none;
+}
+.studio-site :is(.motion-control, .menu-button, .journey-prev, .journey-next) svg {
+  stroke-width: 1.5;
+}
+.studio-site .header .menu-button,
+.studio-site :is(.header, .mobile-stage-top, .journey-actions) .motion-control.compact,
+.studio-site .footer .motion-control {
+  border-radius: 8px;
+}
+.studio-site .contact-form form button[type='submit'] {
+  border-radius: 8px;
+  min-height: 46px;
+  font-size: 12px;
+  font-weight: 500;
+}

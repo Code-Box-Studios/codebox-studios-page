@@ -17,7 +17,9 @@ import {
   Trust,
 } from './sections'
 import './production.css'
+import './formal.css'
 import './mobile.css'
+import './mobile-sections.css'
 
 export function StudioLanding({
   settings,
@@ -49,7 +51,7 @@ export function StudioLanding({
         <aside className="studio-announcement">
           <span>{announcement?.text}</span>
           {announcement?.linkHref && (
-            <a href={announcement.linkHref}>{announcement.linkLabel || 'Get in touch'} ↗</a>
+            <a href={announcement.linkHref}>{announcement.linkLabel || 'Get in touch'}</a>
           )}
         </aside>
       )}
