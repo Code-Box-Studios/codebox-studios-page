@@ -171,19 +171,14 @@ export const landingContentSeed: Partial<LandingContent> = {
         note: 'A point-of-sale and business monitoring platform for Philippine stores and cafés, connecting checkout, inventory, shift management, and analytics across branches.',
       },
       {
-        tag: 'Sports & venue booking',
-        title: 'Pikol',
-        note: 'A pickleball court discovery and booking platform for finding venues, checking availability, and reserving court time, with payments made directly to the venue.',
-      },
-      {
-        tag: 'Photography & online booking',
-        title: 'Monochrome Studio',
-        note: 'A photography studio website for browsing photo-session packages, checking available slots, and booking sessions online.',
-      },
-      {
         tag: 'University fleet operations',
         title: 'Motorpool Management System',
         note: 'A university motorpool management system for fleet records, trip requests, vehicle care, fuel logs, spare-parts inventory, and GPS monitoring.',
+      },
+      {
+        tag: 'Sports & venue booking',
+        title: 'Pikol',
+        note: 'A pickleball court discovery and booking platform for finding venues, checking availability, and reserving court time, with payments made directly to the venue.',
       },
       {
         tag: 'Personal finance',
