@@ -108,7 +108,7 @@ export const SiteSettings: GlobalConfig = {
                   ],
                 },
                 { name: 'copyright', type: 'text', defaultValue: '© 2026 Code Box Studios' },
-                { name: 'location', type: 'text', defaultValue: 'Tagum, Davao' },
+                { name: 'location', type: 'text', defaultValue: 'Tagum, Davao, Philippines' },
               ],
             },
           ],

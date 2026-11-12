@@ -284,7 +284,7 @@ export const LandingContent: GlobalConfig = {
                   type: 'row',
                   fields: [
                     { name: 'email', type: 'text', defaultValue: 'codeboxstudios.official@gmail.com' },
-                    { name: 'locationNote', type: 'text', defaultValue: 'Tagum, Davao · Remote-friendly' },
+                    { name: 'locationNote', type: 'text', defaultValue: 'Tagum, Davao, Philippines · Remote-friendly' },
                   ],
                 },
                 { name: 'submitLabel', type: 'text', defaultValue: 'Send inquiry' },

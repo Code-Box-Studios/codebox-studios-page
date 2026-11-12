@@ -53,7 +53,7 @@ export const siteSettingsSeed: Partial<SiteSetting> = {
       },
     ],
     copyright: '© 2026 Code Box Studios',
-    location: 'Tagum, Davao',
+    location: 'Tagum, Davao, Philippines',
   },
   seo: {
     title: 'Code Box Studios — Software, built like architecture',
@@ -64,7 +64,7 @@ export const siteSettingsSeed: Partial<SiteSetting> = {
 
 export const landingContentSeed: Partial<LandingContent> = {
   hero: {
-    eyebrow: 'Digital engineering studio · Tagum, Davao',
+    eyebrow: 'Digital engineering studio · Philippines',
     heading: 'Software, built like architecture.',
     body: 'Code Box Studios designs and engineers robust, modular, and scalable web platforms — the interface layer and the systems beneath it.',
     primaryCtaLabel: 'Start a project',
@@ -232,7 +232,7 @@ export const landingContentSeed: Partial<LandingContent> = {
     body: "Code Box Studios is an independent engineering studio. We build the modular systems, interfaces, and infrastructure behind modern web products — and we document them well enough that your team keeps moving after we're gone.",
     stats: [
       { label: 'Est. 2026', note: 'Independent studio' },
-      { label: 'Based in Tagum, Davao', note: 'Working remotely' },
+      { label: 'Based in the Philippines', note: 'Tagum, Davao' },
       { label: 'Frontend · Fullstack', note: 'End-to-end delivery' },
       { label: 'Headless-first', note: 'CMS & commerce' },
     ],
@@ -278,7 +278,7 @@ export const landingContentSeed: Partial<LandingContent> = {
       },
       {
         question: 'Where are you based?',
-        answer: 'We are based in Tagum, Davao, and work with clients remotely across time zones.',
+        answer: 'We are based in Tagum, Davao, Philippines, and work with clients remotely across time zones.',
       },
     ],
   },
@@ -287,14 +287,14 @@ export const landingContentSeed: Partial<LandingContent> = {
     heading: "Tell us what you're building.",
     body: "Share a few details and we'll get back within two business days.",
     email: 'codeboxstudios.official@gmail.com',
-    locationNote: 'Tagum, Davao · Remote-friendly',
+    locationNote: 'Tagum, Davao, Philippines · Remote-friendly',
     submitLabel: 'Send inquiry',
     budgetOptions: [
-      { label: 'Under €10k' },
-      { label: '€10k – €25k' },
-      { label: '€25k – €50k' },
-      { label: '€50k – €100k' },
-      { label: '€100k+' },
+      { label: 'Under ₱10,000' },
+      { label: '₱10,000 – ₱25,000' },
+      { label: '₱25,000 – ₱50,000' },
+      { label: '₱50,000 – ₱100,000' },
+      { label: '₱100,000+' },
       { label: 'Not sure yet' },
     ],
   },
