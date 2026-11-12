@@ -44,7 +44,7 @@ test('arbitrary CMS projects retain their name, tag, and note', () => {
 })
 
 test('real products use their own previews when no CMS screenshot is supplied', () => {
-  for (const title of ['Tally', 'Motorpool Management System']) {
+  for (const title of ['Tally', 'Motorpool Management System', 'SentryPOS', 'Pikol', 'Monochrome Studio']) {
     const result = resolveProject({
       title,
       tag: 'Software product',
@@ -55,6 +55,20 @@ test('real products use their own previews when no CMS screenshot is supplied', 
     assert.equal(result.line, title)
     assert.equal(result.body, 'Built by Code Box Studios.')
   }
+})
+
+test('featured products open their verified public websites while unknown projects have no invented destination', () => {
+  const websites = {
+    SentryPOS: 'https://sentry-pos-landing.vercel.app/',
+    Pikol: 'https://pikol-ph.vercel.app/',
+    'Monochrome Studio': 'https://monochrome-studio-site.vercel.app/',
+    'Motorpool Management System': 'https://um-mms-web.vercel.app/',
+    Tally: 'https://tally-rho-sand.vercel.app/',
+  }
+  for (const [title, website] of Object.entries(websites)) {
+    assert.equal(resolveProject({ title, tag: 'Software' }).href, website)
+  }
+  assert.equal(resolveProject({ title: 'Unlisted project', tag: 'Custom' }).href, null)
 })
 
 test('a CMS screenshot takes precedence over a built-in product preview', () => {

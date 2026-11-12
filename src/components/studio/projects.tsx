@@ -303,10 +303,12 @@ export function ProjectJourney({ data }: { data: NonNullable<LandingContent['por
                   </div>
                   <a
                     className="project-link"
-                    href="#contact"
-                    aria-label={`Discuss ${project.title}`}
+                    href={project.href || '#contact'}
+                    target={project.href ? '_blank' : undefined}
+                    rel={project.href ? 'noopener noreferrer' : undefined}
+                    aria-label={project.href ? `Visit ${project.title} website` : `Discuss ${project.title}`}
                   >
-                    Discuss project
+                    {project.href ? 'Visit website' : 'Discuss project'}
                   </a>
                 </div>
               </div>

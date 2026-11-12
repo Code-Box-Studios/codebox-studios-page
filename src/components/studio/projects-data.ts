@@ -4,14 +4,31 @@ import type { ProjectKind } from './project-art'
 
 export type PortfolioItem = NonNullable<NonNullable<LandingContent['portfolio']>['items']>[number]
 
-const productPreviews: Record<string, { url: string; alt: string }> = {
+const productPreviews: Record<string, { url: string; alt: string; href: string }> = {
   tally: {
     url: '/projects/tally.png',
     alt: 'Tally landing page with an illustrative repayment preview',
+    href: 'https://tally-rho-sand.vercel.app/',
   },
   'motorpool management system': {
-    url: '/projects/motorpool-management-system.png',
-    alt: 'Motorpool Management System sign-in screen',
+    url: '/projects/motorpool-management-system-2026-11.webp',
+    alt: 'Updated Motorpool Management System website',
+    href: 'https://um-mms-web.vercel.app/',
+  },
+  sentrypos: {
+    url: '/projects/sentry-pos.webp',
+    alt: 'SentryPOS website showing its point-of-sale and branch monitoring platform',
+    href: 'https://sentry-pos-landing.vercel.app/',
+  },
+  pikol: {
+    url: '/projects/pikol.webp',
+    alt: 'Pikol website for discovering and booking pickleball courts',
+    href: 'https://pikol-ph.vercel.app/',
+  },
+  'monochrome studio': {
+    url: '/projects/monochrome-studio.webp',
+    alt: 'Monochrome Studio website with photo-session packages and online booking',
+    href: 'https://monochrome-studio-site.vercel.app/',
   },
 }
 
@@ -66,14 +83,16 @@ const concepts: Record<
 }
 
 export function resolveProject(item: PortfolioItem) {
+  const preview = productPreviews[item.title.trim().toLowerCase()]
   const uploadedImage = asMedia(item.image)
   const image = uploadedImage?.url
     ? uploadedImage
-    : productPreviews[item.title.trim().toLowerCase()] || null
+    : preview || null
   const concept = !image?.url ? concepts[item.title.trim().toLowerCase()] : undefined
   return {
     ...item,
     image: image?.url ? image : null,
+    href: preview?.href || null,
     concept: Boolean(concept),
     line: concept?.line || item.title,
     body: [concept?.body, item.note].filter(Boolean).join(' '),

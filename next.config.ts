@@ -17,6 +17,9 @@ const nextConfig: NextConfig = {
       {
         pathname: '/projects/*.png',
       },
+      {
+        pathname: '/projects/*.webp',
+      },
     ],
     // Allow SVG uploads (e.g. client logos) through next/image, hardened so
     // an SVG can't execute script or be rendered inline as a document.
