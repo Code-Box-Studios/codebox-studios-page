@@ -78,8 +78,45 @@ Two inboxes capture form submissions:
 - **Inquiries** — the contact form ("Start a project").
 - **Subscribers** — the footer newsletter signups.
 
-> Email delivery is not configured — submissions are stored in the CMS. To also send emails, add a
-> Payload [email adapter](https://payloadcms.com/docs/email/overview).
+New inquiries send a plain-text notification through Payload's official
+[Nodemailer adapter](https://payloadcms.com/docs/email/overview) when SMTP is configured. The
+default recipient is `codeboxstudios.official@gmail.com`; the visitor's email is the Reply-To address.
+Editing an inquiry does not send another email. Newsletter signups remain stored in the CMS only.
+
+### Configure inquiry email
+
+Set these server-only environment variables locally or in Vercel's project environment settings:
+
+| Variable | Value |
+| --- | --- |
+| `SMTP_HOST` | Your provider's SMTP hostname |
+| `SMTP_PORT` | `587` for STARTTLS (default), or `465` for TLS from connection start |
+| `SMTP_SECURE` | `false` for port 587, `true` for port 465; defaults according to the port |
+| `SMTP_USER` | Your SMTP login |
+| `SMTP_PASS` | Your SMTP password or app password |
+| `EMAIL_FROM_ADDRESS` | A sender address allowed by your provider; defaults to `SMTP_USER` |
+| `EMAIL_FROM_NAME` | `Code Box Studios` by default |
+| `CONTACT_NOTIFICATION_EMAIL` | `codeboxstudios.official@gmail.com` by default; one inbox only |
+
+Both port modes require encryption. SMTP settings must be complete and valid before sending is
+enabled. Missing settings never create a test email account or treat Payload's logging adapter as
+delivery. Transport initialization does not contact SMTP during builds. The first send checks the
+connection and credentials, with bounded connection, greeting, DNS, and socket timeouts.
+
+For Gmail, use `smtp.gmail.com`, port `465`, `SMTP_SECURE=true`, and the full Gmail address as
+`SMTP_USER` and `EMAIL_FROM_ADDRESS`. Gmail requires an app password for this password-based
+integration. [Google's app-password guide](https://support.google.com/accounts/answer/185833)
+requires 2-Step Verification; app passwords may be unavailable under some account policies.
+Use a dedicated app password, not the normal Google account password. Keep it in server environment
+settings, never in source control, screenshots, or chat. Redeploy Vercel after changing environment
+variables.
+
+Delivery is best effort. Unconfigured or failed email leaves the inquiry available in
+**Admin → Inbox → Inquiries** and logs only its ID with a generic warning. There is no automatic retry
+or delivery-status field; failed notifications must be followed up from the CMS. A successful form
+submission confirms storage, not inbox receipt. After configuration, submit one test inquiry through
+the live form, confirm both the CMS entry and notification inbox receipt, and check that Reply-To
+targets the test visitor. SMTP acceptance alone does not prove inbox delivery.
 
 ## How styling works
 
@@ -160,5 +197,5 @@ Other notes:
 - Set a strong `PAYLOAD_SECRET` and change the seeded admin password after first login.
 - Uploaded media is stored on the local filesystem by default; for a serverless deploy add a
   storage adapter (S3, Vercel Blob, etc.) so uploads persist.
-- Contact-form and newsletter submissions are stored in the CMS; add a Payload email adapter if you
-  also want email delivery.
+- Contact-form and newsletter submissions are stored in the CMS. Configure SMTP as described above
+  to enable contact inquiry email notifications.

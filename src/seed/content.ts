@@ -53,7 +53,7 @@ export const siteSettingsSeed: Partial<SiteSetting> = {
       },
     ],
     copyright: '© 2026 Code Box Studios',
-    location: 'Malta',
+    location: 'Tagum, Davao',
   },
   seo: {
     title: 'Code Box Studios — Software, built like architecture',
@@ -64,7 +64,7 @@ export const siteSettingsSeed: Partial<SiteSetting> = {
 
 export const landingContentSeed: Partial<LandingContent> = {
   hero: {
-    eyebrow: 'Digital engineering studio · Malta',
+    eyebrow: 'Digital engineering studio · Tagum, Davao',
     heading: 'Software, built like architecture.',
     body: 'Code Box Studios designs and engineers robust, modular, and scalable web platforms — the interface layer and the systems beneath it.',
     primaryCtaLabel: 'Start a project',
@@ -232,7 +232,7 @@ export const landingContentSeed: Partial<LandingContent> = {
     body: "Code Box Studios is an independent engineering studio. We build the modular systems, interfaces, and infrastructure behind modern web products — and we document them well enough that your team keeps moving after we're gone.",
     stats: [
       { label: 'Est. 2026', note: 'Independent studio' },
-      { label: 'Based in Malta', note: 'Working remotely' },
+      { label: 'Based in Tagum, Davao', note: 'Working remotely' },
       { label: 'Frontend · Fullstack', note: 'End-to-end delivery' },
       { label: 'Headless-first', note: 'CMS & commerce' },
     ],
@@ -278,7 +278,7 @@ export const landingContentSeed: Partial<LandingContent> = {
       },
       {
         question: 'Where are you based?',
-        answer: 'Malta, working with clients remotely across time zones.',
+        answer: 'We are based in Tagum, Davao, and work with clients remotely across time zones.',
       },
     ],
   },
@@ -286,8 +286,8 @@ export const landingContentSeed: Partial<LandingContent> = {
     eyebrow: 'Start a project',
     heading: "Tell us what you're building.",
     body: "Share a few details and we'll get back within two business days.",
-    email: 'hello@codeboxstudios.com',
-    locationNote: 'Malta · Remote-friendly',
+    email: 'codeboxstudios.official@gmail.com',
+    locationNote: 'Tagum, Davao · Remote-friendly',
     submitLabel: 'Send inquiry',
     budgetOptions: [
       { label: 'Under €10k' },

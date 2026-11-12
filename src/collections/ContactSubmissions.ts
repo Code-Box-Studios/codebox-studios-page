@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { notifyContactSubmission } from '../lib/contact-notification'
 
 // Inbound "Start a project" inquiries captured from the contact form.
 export const ContactSubmissions: CollectionConfig = {
@@ -19,6 +20,9 @@ export const ContactSubmissions: CollectionConfig = {
     useAsTitle: 'name',
     defaultColumns: ['name', 'email', 'company', 'budget', 'createdAt'],
     group: 'Inbox',
+  },
+  hooks: {
+    afterChange: [notifyContactSubmission],
   },
   fields: [
     {

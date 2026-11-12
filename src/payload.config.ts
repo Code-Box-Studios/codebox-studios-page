@@ -11,6 +11,7 @@ import { ContactSubmissions } from './collections/ContactSubmissions'
 import { Subscribers } from './collections/Subscribers'
 import { SiteSettings } from './globals/SiteSettings'
 import { LandingContent } from './globals/LandingContent'
+import { getEmailAdapter } from './lib/email'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -41,6 +42,7 @@ export default buildConfig({
   collections: [Users, Media, ContactSubmissions, Subscribers],
   globals: [SiteSettings, LandingContent],
   editor: lexicalEditor(),
+  email: getEmailAdapter(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
