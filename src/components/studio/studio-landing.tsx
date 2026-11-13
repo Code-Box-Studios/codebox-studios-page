@@ -20,6 +20,7 @@ import './production.css'
 import './formal.css'
 import './mobile.css'
 import './mobile-sections.css'
+import './expressive-motion.css'
 
 export function StudioLanding({
   settings,

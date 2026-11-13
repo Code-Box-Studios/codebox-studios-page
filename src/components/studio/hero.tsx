@@ -6,6 +6,7 @@ import { clamp, cubeBlocks, cubeBlockPose, cubeCamera, layers } from './motion'
 import { useStudioMotion } from './motion-provider'
 import { MobileHero } from './mobile-hero'
 import { compactMotionQuery } from './mobile-motion'
+import { layerSummaries } from './product-layers'
 
 export function StudioHero({ data }: { data: NonNullable<LandingContent['hero']> }) {
   const { compact } = useStudioMotion()
@@ -30,7 +31,16 @@ function DesktopHero({ data }: { data: NonNullable<LandingContent['hero']> }) {
   const dial = useRef<HTMLSpanElement>(null)
   const motionTime = useRef(0)
   const displayedPose = useRef({ progress: 0, x: 0, y: 0, initialized: false })
+  const [short, setShort] = useState(false)
   const [story, setStory] = useState({ index: 0, layer: 0, visible: false })
+
+  useEffect(() => {
+    const query = matchMedia('(max-height: 680px)')
+    const change = () => setShort(query.matches)
+    change()
+    query.addEventListener('change', change)
+    return () => query.removeEventListener('change', change)
+  }, [])
 
   useEffect(() => {
     if (matchMedia(compactMotionQuery).matches) return
@@ -181,14 +191,24 @@ function DesktopHero({ data }: { data: NonNullable<LandingContent['hero']> }) {
   }, [enabled])
 
   const layer = layers[story.layer]
+  const product = !short && story.index === 2
   const heading = data.heading || 'Software, built like architecture.'
   return (
-    <section className="hero-track" ref={track} aria-label="Introduction">
+    <section
+      className="hero-track"
+      ref={track}
+      data-layout={short ? 'reading' : 'scene'}
+      aria-label="Introduction"
+    >
       <div className="hero">
         <canvas className="particle-canvas" ref={canvas} aria-hidden />
         <div className="hero-grid" aria-hidden />
         <div className="wrap">
-          <div className="hero-copy" aria-hidden={story.index !== 0} inert={story.index !== 0}>
+          <div
+            className="hero-copy"
+            aria-hidden={!short && story.index !== 0}
+            inert={!short && story.index !== 0}
+          >
             <p className="small-label mono hero-eyebrow">
               <span className="dot" />
               {data.eyebrow}
@@ -216,13 +236,17 @@ function DesktopHero({ data }: { data: NonNullable<LandingContent['hero']> }) {
               </a>
             </div>
           </div>
-          <div className="hero-echo" aria-hidden={!story.visible} inert={!story.visible}>
+          <div
+            className="hero-echo"
+            aria-hidden={!short && !story.visible}
+            inert={!short && !story.visible}
+          >
             <p className="small-label mono">
               <span className="dot" />
-              <span>{story.index === 2 ? 'The Code Box approach' : layer.title}</span>
+              <span>{product ? 'The Code Box approach' : 'Inside your software product'}</span>
             </p>
             <h2>
-              {story.index === 2 ? (
+              {product ? (
                 <>
                   One connected
                   <br />
@@ -237,19 +261,20 @@ function DesktopHero({ data }: { data: NonNullable<LandingContent['hero']> }) {
               )}
             </h2>
             <p className="business-explanation">
-              {story.index === 2
+              {product
                 ? 'The layers come together as a web app, storefront, or internal tool your team can use and build on.'
-                : layer.body}
+                : 'Every part has a business purpose. The interface, workflows, content, and infrastructure work together as one system.'}
             </p>
-            <div className="layer-key" role="list" aria-label="Software product layers">
+            <div className="hero-layer-list" role="list" aria-label="Software product layers">
               {layers.map((item) => (
                 <span
                   role="listitem"
                   data-layer={item.id}
                   key={item.id}
-                  className={story.index === 2 || item.id === layer.id ? 'active' : ''}
+                  className={product || item.id === layer.id ? 'active' : ''}
                 >
-                  {item.label}
+                  <strong>{item.label}</strong>
+                  <span>{layerSummaries[item.id]}</span>
                 </span>
               ))}
             </div>
@@ -274,7 +299,7 @@ function DesktopHero({ data }: { data: NonNullable<LandingContent['hero']> }) {
               const pose = cubeBlockPose(block, 0)
               return (
                 <div
-                  className={`cubelet ${story.index === 2 || (story.index === 1 && block.layer === layer.id) ? 'layer-active' : ''}`}
+                  className={`cubelet ${product || (story.index === 1 && block.layer === layer.id) ? 'layer-active' : ''}`}
                   data-layer={block.layer}
                   key={block.index}
                   style={

@@ -1,0 +1,221 @@
+/* The artwork carries the choreography. Reading surfaces retain their position. */
+.studio-site[data-ready] .spatial-services [data-depth='service'] {
+  position: relative;
+  isolation: isolate;
+}
+.studio-site[data-ready] .spatial-services [data-depth='service']::before {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  border: 1px solid #ff77592e;
+  border-radius: inherit;
+  background: linear-gradient(125deg, #ff775910, transparent 60%);
+  transform: translate(10px, 10px) rotate(-1deg);
+  transform-origin: right bottom;
+  z-index: -1;
+  pointer-events: none;
+}
+.studio-site[data-ready] .spatial-services [data-depth='service'].motion-entered::before {
+  animation: studio-frame-assemble 750ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+.studio-site[data-ready][data-motion='off'] .spatial-services [data-depth='service']::before {
+  animation-play-state: paused;
+}
+.studio-site[data-ready] .spatial-services .service {
+  position: relative;
+}
+.studio-site[data-ready] .spatial-process .process-card .geometry {
+  transform: perspective(700px) rotateX(calc(16deg - var(--art-progress, 0.5) * 24deg))
+    rotateY(calc(-32deg + var(--art-progress, 0.5) * 64deg))
+    rotateZ(calc(-5deg + var(--art-progress, 0.5) * 10deg));
+}
+.studio-site[data-ready] .spatial-process .process-card .geometry::before {
+  content: '';
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  left: calc(50% - 50px);
+  top: calc(50% - 50px);
+  border: 1px solid #ff775923;
+  border-radius: 50%;
+  transform: rotateX(65deg) scale(calc(0.7 + var(--art-progress, 0.5) * 0.6));
+  box-shadow:
+    0 0 0 15px #ff775904,
+    0 0 0 30px #ff775903;
+  pointer-events: none;
+}
+.studio-site[data-ready] .process-card.motion-entered .geometry svg {
+  filter: drop-shadow(0 0 12px #ff775933);
+}
+.studio-site[data-ready] .spatial-about::before {
+  --about-shift: calc((var(--art-progress, 0.5) - 0.5) * -100px);
+}
+.studio-site[data-ready] .spatial-contact {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+}
+.studio-site[data-ready] .spatial-contact::before {
+  content: '';
+  position: absolute;
+  width: min(900px, 110vw);
+  aspect-ratio: 1;
+  right: -25%;
+  top: -20%;
+  border: 1px solid #ff775916;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, #ff77590a, transparent 65%);
+  box-shadow:
+    0 0 0 70px #ff775904,
+    0 0 0 140px #ff775903;
+  transform: translateY(calc((var(--art-progress, 0.5) - 0.5) * -80px)) rotateX(35deg)
+    rotateY(-25deg);
+  z-index: -1;
+  pointer-events: none;
+}
+.studio-site[data-ready] .hero-copy h1,
+.studio-site[data-ready] .mobile-intro h1 {
+  perspective: 1000px;
+}
+.studio-site[data-ready] .hero-echo[aria-hidden='false'] h2 {
+  animation: studio-heading-arrive 500ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+.studio-site[data-ready][data-motion='off'] .hero-echo h2 {
+  animation-play-state: paused;
+}
+@keyframes studio-frame-assemble {
+  from {
+    opacity: 0;
+    transform: translate(38px, 24px) rotate(-6deg);
+  }
+  to {
+    opacity: 1;
+    transform: translate(10px, 10px) rotate(-1deg);
+  }
+}
+@keyframes studio-heading-arrive {
+  from {
+    opacity: 0.76;
+    translate: 0 20px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+@media (max-width: 760px), (max-width: 1024px) and (pointer: coarse) {
+  .studio-site[data-ready] .spatial-services [data-depth='service']::before {
+    inset: 4px;
+    transform: translate(7px, 7px) rotate(-1deg);
+  }
+  .studio-site[data-ready] .spatial-about::before {
+    --about-shift: calc((var(--art-progress, 0.5) - 0.5) * -40px);
+  }
+  .studio-site[data-ready] .spatial-contact::before {
+    right: -55%;
+    top: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .studio-site[data-ready] .spatial-services [data-depth='service']::before,
+  .studio-site[data-ready] .hero-echo[aria-hidden] h2 {
+    animation: none;
+  }
+}
+
+/* Layer explanations stay in place while the cube changes its composition. */
+.studio-site[data-ready] .hero-layer-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 20px;
+  max-width: 480px;
+  margin-top: 22px;
+}
+.studio-site[data-ready] .hero-layer-list > span {
+  display: grid;
+  align-content: start;
+  gap: 6px;
+  border-top: 1px solid #ffffff28;
+  padding-top: 9px;
+}
+.studio-site[data-ready] .hero-layer-list strong {
+  color: #eeeef0;
+  font-size: 11px;
+  font-weight: 500;
+}
+.studio-site[data-ready] .hero-layer-list > span > span {
+  color: #b7b7c0;
+  font-size: 11px;
+  line-height: 1.55;
+}
+.studio-site[data-ready] .hero-layer-list .active {
+  border-color: #ff7759;
+}
+.studio-site[data-ready] .hero-layer-list .active strong {
+  color: #ffad96;
+}
+@media (max-height: 800px) {
+  .studio-site[data-ready] .hero-layer-list {
+    gap: 10px 18px;
+    margin-top: 15px;
+  }
+  .studio-site[data-ready] .hero-layer-list > span > span {
+    font-size: 10px;
+  }
+}
+
+/* Short desktop windows keep every sentence in normal reading flow. */
+.studio-site[data-ready] .hero-track[data-layout='reading'] {
+  height: auto !important;
+}
+.studio-site[data-ready] .hero-track[data-layout='reading'] .hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  align-items: start;
+  gap: 32px;
+  width: min(1376px, calc(100% - 104px));
+  margin-inline: auto;
+  height: auto;
+  min-height: 0;
+  padding-block: calc(var(--studio-header-height, 100px) + 36px) 48px;
+  overflow: visible;
+}
+.studio-site[data-ready] .hero-track[data-layout='reading'] .hero > .wrap:not(.hero-bottom) {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+.studio-site[data-ready] .hero-track[data-layout='reading'] .hero-copy,
+.studio-site[data-ready] .hero-track[data-layout='reading'] .hero-echo {
+  position: relative;
+  inset: auto;
+  width: 100%;
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+}
+.studio-site[data-ready] .hero-track[data-layout='reading'] .hero-copy h1 {
+  font-size: clamp(44px, 5vw, 70px);
+}
+.studio-site[data-ready] .hero-track[data-layout='reading'] .hero-echo {
+  padding-top: 52px;
+}
+.studio-site[data-ready] .hero-track[data-layout='reading'] .hero-echo h2 {
+  font-size: clamp(30px, 3.2vw, 46px);
+}
+.studio-site[data-ready] .hero-track[data-layout='reading'] .hero-visual {
+  position: sticky;
+  inset: auto;
+  top: calc(var(--studio-header-height, 100px) + 24px);
+  width: 100%;
+  height: calc(100svh - var(--studio-header-height, 100px) - 48px);
+  min-height: 180px;
+  margin: 0;
+  overflow: clip;
+}
+.studio-site[data-ready]
+  .hero-track[data-layout='reading']
+  :is(.hero-bottom, .visual-label, .scene-stage, .scene-dial, .visual-caption) {
+  display: none;
+}

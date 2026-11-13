@@ -1,0 +1,64 @@
+/* One height drives the header, anchor clearance, and sticky artwork offsets. */
+html:has(.studio-site > .studio-header) {
+  --studio-header-height: 100px;
+  scroll-padding-top: calc(var(--studio-header-height) + 16px);
+}
+
+.studio-site > .header.studio-header {
+  position: sticky;
+  top: 0;
+  inset-inline: auto;
+  z-index: 60;
+  height: var(--studio-header-height);
+  /* Preserve the hero's existing overlay layout without measuring on scroll. */
+  margin-block-end: calc(-1 * var(--studio-header-height));
+  background: #17171c;
+  border-bottom: 1px solid var(--line);
+  box-shadow: 0 10px 24px #00000018;
+}
+
+.studio-site > .studio-header .header-inner {
+  height: calc(var(--studio-header-height) - 1px);
+  min-width: 0;
+  border-bottom: 0;
+}
+
+/* Root scroll padding supplies the entire offset, including the work target. */
+.studio-site :is(main[id], section[id], #work) {
+  scroll-margin-top: 0;
+}
+
+.studio-site > .studio-header .menu-button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+
+@media (max-width: 760px) {
+  html:has(.studio-site > .studio-header) {
+    --studio-header-height: 80px;
+  }
+
+  .studio-site > .studio-header .mobile-navigation {
+    top: calc(var(--studio-header-height) + 8px);
+    left: 20px;
+    right: 20px;
+    max-height: calc(100dvh - var(--studio-header-height) - 24px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    background: #202023;
+    box-shadow: 0 12px 30px #00000040;
+  }
+}
+
+@media (max-height: 540px) and (min-width: 600px) {
+  html:has(.studio-site > .studio-header) {
+    --studio-header-height: 66px;
+  }
+}
+
+@media (max-width: 760px) and (min-height: 551px) and (prefers-reduced-motion: no-preference),
+  (max-width: 1024px) and (pointer: coarse) and (min-height: 551px) and (prefers-reduced-motion: no-preference) {
+  .studio-site .mobile-hero .mobile-cube-stage {
+    top: calc(var(--studio-header-height) + 12px);
+  }
+}

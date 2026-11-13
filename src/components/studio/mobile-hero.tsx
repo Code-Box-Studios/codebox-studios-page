@@ -6,6 +6,7 @@ import { cubeBlocks, layers } from './motion'
 import { mobileCubeBlockPose, mobileStoryFrame } from './mobile-motion'
 import { MotionControl, useStudioMotion } from './motion-provider'
 import { sceneProgress } from './scroll-scenes'
+import { layerSummaries } from './product-layers'
 
 const chapters = [
   {
@@ -21,13 +22,6 @@ const chapters = [
     body: 'A web app, storefront, or internal tool that fits your workflow and grows with your team.',
   },
 ]
-
-const layerSummaries = {
-  interface: 'Clear screens for your customers and staff.',
-  logic: 'Workflows shaped around the way your team works.',
-  content: 'Content and products your team can manage.',
-  infrastructure: 'Reliable data, APIs, and connections behind it all.',
-}
 
 export function MobileHero({ data }: { data: NonNullable<LandingContent['hero']> }) {
   const { enabled, compact } = useStudioMotion()
@@ -79,7 +73,12 @@ export function MobileHero({ data }: { data: NonNullable<LandingContent['hero']>
       if (visible && !frame && !document.hidden) frame = requestAnimationFrame(paint)
     }
     const measure = () => {
-      const readingLine = (stage.current?.offsetHeight ?? 240) + 64
+      const view = stage.current
+      const stickyTop =
+        view && getComputedStyle(view).position === 'sticky'
+          ? parseFloat(getComputedStyle(view).top) || 0
+          : 0
+      const readingLine = (view?.offsetHeight ?? 240) + stickyTop + 24
       anchors = copy.map((node) => node.getBoundingClientRect().top + scrollY - readingLine)
       const available = Math.max(1, innerHeight - readingLine - 24)
       readingEnds = copy.map(

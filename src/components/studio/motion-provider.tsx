@@ -47,6 +47,7 @@ export function StudioMotion({
   const [compact, setCompact] = useState(false)
   const enabled = ready && (override ?? !reduced)
   const root = useRef<HTMLDivElement>(null)
+  const entranceAnimations = useRef(new Set<Animation>())
   const value = useMemo(
     () => ({ enabled, compact, toggle: () => setOverride(!enabled) }),
     [enabled, compact],
@@ -120,6 +121,118 @@ export function StudioMotion({
       window.removeEventListener('resize', schedule)
     }
   }, [compact])
+
+  useEffect(() => {
+    entranceAnimations.current.forEach((animation) => {
+      if (enabled) animation.play()
+      else animation.pause()
+    })
+  }, [enabled])
+
+  useEffect(() => {
+    const animations = entranceAnimations.current
+    return () => {
+      animations.forEach((animation) => animation.cancel())
+      animations.clear()
+    }
+  }, [])
+
+  useEffect(() => {
+    const element = root.current
+    if (!element || !enabled) return
+    const artwork = [
+      ...element.querySelectorAll<HTMLElement>(
+        '.kinetic-banner, [data-depth="service"], .process-card, .spatial-about, .spatial-contact',
+      ),
+    ]
+    const titles = [
+      ...element.querySelectorAll<HTMLElement>(
+        '.section-title, .about h2, .hero-copy h1, .mobile-intro h1',
+      ),
+    ]
+    const active = new Set<HTMLElement>()
+    const animations = entranceAnimations.current
+    let positions = new Map<HTMLElement, { top: number; height: number }>()
+    let frame = 0
+
+    function update() {
+      frame = 0
+      if (document.hidden) return
+      const height = innerHeight
+      const y = scrollY
+      active.forEach((node) => {
+        const box = positions.get(node)
+        if (!box) return
+        const progress = clamp((y + height - box.top) / Math.max(1, height + box.height))
+        node.style.setProperty('--art-progress', String(progress))
+        if (node.classList.contains('kinetic-banner'))
+          node.style.setProperty('--marquee-x', `${-60 - progress * (compact ? 150 : 300)}px`)
+      })
+    }
+    const schedule = () => {
+      if (!frame && !document.hidden) frame = requestAnimationFrame(update)
+    }
+    const measure = () => {
+      positions = new Map(
+        artwork.map((node) => [
+          node,
+          {
+            top: node.getBoundingClientRect().top + scrollY,
+            height: node.offsetHeight,
+          },
+        ]),
+      )
+      schedule()
+    }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const node = entry.target as HTMLElement
+          if (entry.isIntersecting) {
+            if (positions.has(node)) active.add(node)
+            if (!node.dataset.motionSeen) {
+              node.dataset.motionSeen = 'true'
+              node.classList.add('motion-entered')
+              if (titles.includes(node)) {
+                const animation = node.animate(
+                  [
+                    { opacity: 0.76, translate: `0 ${compact ? 12 : 20}px` },
+                    { opacity: 1, translate: '0 0' },
+                  ],
+                  { duration: compact ? 420 : 600, easing: 'cubic-bezier(.16,1,.3,1)' },
+                )
+                animations.add(animation)
+                animation.onfinish = () => animations.delete(animation)
+              }
+            }
+          } else active.delete(node)
+        })
+        schedule()
+      },
+      { rootMargin: '0px 0px -32px', threshold: 0.05 },
+    )
+    measure()
+    new Set([...artwork, ...titles]).forEach((node) => observer.observe(node))
+    const resize = new ResizeObserver(measure)
+    resize.observe(element)
+    const visibility = () => {
+      if (document.hidden) {
+        cancelAnimationFrame(frame)
+        frame = 0
+      } else schedule()
+    }
+    window.addEventListener('scroll', schedule, { passive: true })
+    window.addEventListener('resize', measure, { passive: true })
+    document.addEventListener('visibilitychange', visibility)
+    return () => {
+      observer.disconnect()
+      resize.disconnect()
+      cancelAnimationFrame(frame)
+      window.removeEventListener('scroll', schedule)
+      window.removeEventListener('resize', measure)
+      document.removeEventListener('visibilitychange', visibility)
+    }
+  }, [enabled, compact])
 
   return (
     <MotionContext.Provider value={value}>

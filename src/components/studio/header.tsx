@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import type { SiteSetting } from '@/payload-types'
 import { Logo } from '@/components/logo'
 import { MotionControl } from './motion-provider'
+import './sticky-header.css'
 
 export function StudioHeader({ settings }: { settings: SiteSetting }) {
   const [open, setOpen] = useState(false)
@@ -46,21 +47,30 @@ export function StudioHeader({ settings }: { settings: SiteSetting }) {
         </a>
       ))}
       {settings.signInHref && settings.signInHref !== '#' && (
-        <a href={settings.signInHref}>{settings.signInLabel || 'Sign in'}</a>
+        <a href={settings.signInHref} onClick={closeMenu}>
+          {settings.signInLabel || 'Sign in'}
+        </a>
       )}
     </>
   )
   return (
-    <header className="header">
+    <header className="header studio-header">
       <div className="wrap header-inner">
-        <a className="brand" href="#top" aria-label={`${settings.brandName} home`}>
+        <a
+          className="brand"
+          href="#top"
+          aria-label={`${settings.brandName} home`}
+          onClick={closeMenu}
+        >
           <Logo brandName={settings.brandName} />
         </a>
         <nav className="desktop-navigation" aria-label="Main navigation">
           {links}
         </nav>
         <div className="header-cta">
-          <a href="#contact">{settings.ctaLabel || 'Let’s talk'}</a>
+          <a href="#contact" onClick={closeMenu}>
+            {settings.ctaLabel || 'Let’s talk'}
+          </a>
           <MotionControl compact />
           <details
             className="mobile-menu"
@@ -71,6 +81,7 @@ export function StudioHeader({ settings }: { settings: SiteSetting }) {
               ref={button}
               className="menu-button"
               aria-controls="studio-navigation"
+              aria-expanded={open}
               aria-label={open ? 'Close menu' : 'Open menu'}
             >
               {open ? (
