@@ -2,7 +2,7 @@ import { clamp, type CubeBlock } from './motion'
 
 export const compactMotionQuery = '(max-width: 760px), (max-width: 1024px) and (pointer: coarse)'
 
-// Reading holds come from sceneProgress; the scroll controller supplies the easing.
+// Reading holds come from sceneProgress; the view eases only the cube illustration.
 export function mobileStoryFrame(progress: number) {
   const p = clamp(progress)
   return { pose: p, chapter: Math.round(p * 2) }

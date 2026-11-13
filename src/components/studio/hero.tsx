@@ -1,12 +1,11 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react'
+import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import type { LandingContent } from '@/payload-types'
 import { clamp, cubeBlocks, cubeBlockPose, cubeCamera, layers } from './motion'
 import { useStudioMotion } from './motion-provider'
 import { MobileHero } from './mobile-hero'
 import { compactMotionQuery } from './mobile-motion'
-import { useSceneScroll } from './use-scene-scroll'
 
 export function StudioHero({ data }: { data: NonNullable<LandingContent['hero']> }) {
   const { compact } = useStudioMotion()
@@ -29,17 +28,9 @@ function DesktopHero({ data }: { data: NonNullable<LandingContent['hero']> }) {
   const orbit = useRef<HTMLDivElement>(null)
   const canvas = useRef<HTMLCanvasElement>(null)
   const dial = useRef<HTMLSpanElement>(null)
+  const motionTime = useRef(0)
+  const displayedPose = useRef({ progress: 0, x: 0, y: 0, initialized: false })
   const [story, setStory] = useState({ index: 0, layer: 0, visible: false })
-  const getStops = useCallback(() => {
-    const element = track.current
-    if (!element || matchMedia(compactMotionQuery).matches) return []
-    const distance = element.offsetHeight - innerHeight
-    if (distance <= 0) return []
-    const top = element.getBoundingClientRect().top + scrollY
-    // The four middle stops keep each software-layer explanation in view.
-    return [0, ...[0.395, 0.505, 0.615, 0.725, 1].map((progress) => top + progress * distance)]
-  }, [])
-  useSceneScroll(enabled, track, getStops)
 
   useEffect(() => {
     if (matchMedia(compactMotionQuery).matches) return
@@ -53,10 +44,17 @@ function DesktopHero({ data }: { data: NonNullable<LandingContent['hero']> }) {
     let visible = true
     let lastPaint = 0
     let previous = ''
-    let pointerX = 0,
-      pointerY = 0,
-      smoothX = 0,
-      smoothY = 0
+    const frozenProgress = displayedPose.current.initialized
+      ? displayedPose.current.progress
+      : clamp(
+          -section.getBoundingClientRect().top / Math.max(1, section.offsetHeight - innerHeight),
+        )
+    let visualProgress = frozenProgress
+    let lastFrame = 0
+    let pointerX = displayedPose.current.x,
+      pointerY = displayedPose.current.y,
+      smoothX = displayedPose.current.x,
+      smoothY = displayedPose.current.y
     const finePointer = matchMedia('(pointer: fine)')
     const context = surface.getContext('2d')
     const stars = Array.from({ length: 55 }, (_, i) => ({
@@ -81,34 +79,39 @@ function DesktopHero({ data }: { data: NonNullable<LandingContent['hero']> }) {
     function render(time: number) {
       frame = 0
       if (!section || !model || !surface || document.hidden) return
-      const p = enabled
-        ? clamp(
-            -section.getBoundingClientRect().top / Math.max(1, section.offsetHeight - innerHeight),
-          )
-        : 0
-      const t = enabled ? time * 0.001 : 0
+      const p = clamp(
+        -section.getBoundingClientRect().top / Math.max(1, section.offsetHeight - innerHeight),
+      )
+      const elapsed = lastFrame ? Math.min(64, time - lastFrame) : 16
+      lastFrame = time
+      // Ease the illustration, never the user's scroll position or the text.
+      visualProgress += (p - visualProgress) * (1 - Math.exp(-elapsed / 65))
+      const poseProgress = enabled ? visualProgress : frozenProgress
+      if (enabled) motionTime.current += elapsed * 0.001
+      const t = motionTime.current
       smoothX += (pointerX - smoothX) * 0.045
       smoothY += (pointerY - smoothY) * 0.045
+      displayedPose.current = { progress: poseProgress, x: smoothX, y: smoothY, initialized: true }
       section.style.setProperty('--p', String(p))
-      const camera = cubeCamera(p, t, smoothX, smoothY)
+      const camera = cubeCamera(poseProgress, t, smoothX, smoothY)
       model.style.transform = `translateY(${camera.float}px) rotateX(${camera.pitch}deg) rotateY(${camera.yaw}deg) rotateZ(${camera.roll}deg)`
       blocks.forEach((element, i) => {
-        const pose = cubeBlockPose(cubeBlocks[i], p, t)
+        const pose = cubeBlockPose(cubeBlocks[i], poseProgress, t)
         element.style.transform = `translate3d(${pose.x}px,${pose.y}px,${pose.z}px) rotateX(${pose.turn}deg) rotateY(${pose.turn * 0.6}deg)`
       })
       if (orbit.current)
-        orbit.current.style.transform = `rotateX(${63 - p * 28 + smoothY * 4}deg) rotateZ(${-27 + t * 5}deg)`
+        orbit.current.style.transform = `rotateX(${63 - poseProgress * 28 + smoothY * 4}deg) rotateZ(${-27 + t * 5}deg)`
       rings.forEach((ring, i) => {
-        ring.style.transform = `rotateX(${i * 22 + p * i * 22}deg) rotateY(${i * 35}deg) rotateZ(${t * (i % 2 ? -14 : 17)}deg)`
+        ring.style.transform = `rotateX(${i * 22 + poseProgress * i * 22}deg) rotateY(${i * 35}deg) rotateZ(${t * (i % 2 ? -14 : 17)}deg)`
       })
       if (dial.current)
         dial.current.textContent = `${String(Math.round(p * 360)).padStart(3, '0')}°`
       const index = p < 0.3 ? 0 : p < 0.78 ? 1 : 2
       const layer = clamp(Math.floor(((p - 0.34) / 0.44) * layers.length), 0, layers.length - 1)
-      const key = `${index}:${layer}:${p >= 0.34}`
+      const key = `${index}:${layer}`
       if (key !== previous) {
         previous = key
-        setStory({ index, layer, visible: p >= 0.34 && enabled })
+        setStory({ index, layer, visible: index > 0 })
       }
       if (context && (time - lastPaint > 40 || !enabled)) {
         lastPaint = time
@@ -141,7 +144,7 @@ function DesktopHero({ data }: { data: NonNullable<LandingContent['hero']> }) {
       if (enabled && visible) frame = requestAnimationFrame(render)
     }
     function start() {
-      if (!frame && !document.hidden && (visible || !enabled)) frame = requestAnimationFrame(render)
+      if (!frame && !document.hidden && visible) frame = requestAnimationFrame(render)
     }
     const visibility = () => {
       if (document.hidden) {
@@ -164,6 +167,7 @@ function DesktopHero({ data }: { data: NonNullable<LandingContent['hero']> }) {
     const sizeObserver = new ResizeObserver(resize)
     sizeObserver.observe(surface)
     window.addEventListener('pointermove', move, { passive: true })
+    window.addEventListener('scroll', start, { passive: true })
     document.addEventListener('visibilitychange', visibility)
     resize()
     return () => {
@@ -171,6 +175,7 @@ function DesktopHero({ data }: { data: NonNullable<LandingContent['hero']> }) {
       observer.disconnect()
       sizeObserver.disconnect()
       window.removeEventListener('pointermove', move)
+      window.removeEventListener('scroll', start)
       document.removeEventListener('visibilitychange', visibility)
     }
   }, [enabled])

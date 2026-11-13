@@ -1,12 +1,11 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react'
+import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import type { LandingContent } from '@/payload-types'
 import { cubeBlocks, layers } from './motion'
 import { mobileCubeBlockPose, mobileStoryFrame } from './mobile-motion'
 import { MotionControl, useStudioMotion } from './motion-provider'
-import { readingSceneStops, sceneProgress } from './scroll-scenes'
-import { useSceneScroll } from './use-scene-scroll'
+import { sceneProgress } from './scroll-scenes'
 
 const chapters = [
   {
@@ -32,23 +31,11 @@ const layerSummaries = {
 
 export function MobileHero({ data }: { data: NonNullable<LandingContent['hero']> }) {
   const { enabled, compact } = useStudioMotion()
-  const gestureRoot = useRef<HTMLElement>(null)
   const track = useRef<HTMLDivElement>(null)
   const stage = useRef<HTMLDivElement>(null)
   const model = useRef<HTMLDivElement>(null)
+  const displayedPose = useRef(0)
   const [chapter, setChapter] = useState(0)
-  const getStops = useCallback(() => {
-    const element = track.current
-    const view = stage.current
-    if (!element || !view || getComputedStyle(view).position !== 'sticky') return []
-    const readingLine = view.offsetHeight + 64
-    const copy = [...element.querySelectorAll<HTMLElement>('.mobile-chapter')].map((node) => ({
-      top: node.getBoundingClientRect().top + scrollY,
-      height: node.offsetHeight,
-    }))
-    return [0, ...readingSceneStops(copy, readingLine, innerHeight - readingLine - 24)]
-  }, [])
-  useSceneScroll(enabled && compact, gestureRoot, getStops)
 
   useEffect(() => {
     const element = track.current
@@ -62,22 +49,31 @@ export function MobileHero({ data }: { data: NonNullable<LandingContent['hero']>
     let readingEnds: number[] = []
     let lastPose = -1
     let lastChapter = -1
+    let visualPose = displayedPose.current
+    let lastFrame = 0
 
-    const paint = () => {
+    const paint = (time: number) => {
       frame = 0
       if (document.hidden) return
-      const story = mobileStoryFrame(enabled ? sceneProgress(scrollY, anchors, readingEnds) : 0)
+      const story = mobileStoryFrame(sceneProgress(scrollY, anchors, readingEnds))
       if (lastChapter !== story.chapter) {
         lastChapter = story.chapter
         setChapter(story.chapter)
       }
-      if (story.pose === lastPose) return
-      lastPose = story.pose
+      const elapsed = lastFrame ? Math.min(64, time - lastFrame) : 16
+      lastFrame = time
+      const target = enabled ? story.pose : displayedPose.current
+      visualPose += (target - visualPose) * (1 - Math.exp(-elapsed / 65))
+      if (Math.abs(target - visualPose) < 0.001) visualPose = target
+      if (visualPose === lastPose) return
+      lastPose = visualPose
+      displayedPose.current = visualPose
       // All geometry was read on resize. This frame only writes transforms.
       blocks.forEach((block, index) => {
-        const pose = mobileCubeBlockPose(cubeBlocks[index], story.pose)
+        const pose = mobileCubeBlockPose(cubeBlocks[index], visualPose)
         block.style.transform = `translate3d(${pose.x}px,${pose.y}px,${pose.z}px)`
       })
+      if (enabled && visible && visualPose !== target) frame = requestAnimationFrame(paint)
     }
     const schedule = () => {
       if (visible && !frame && !document.hidden) frame = requestAnimationFrame(paint)
@@ -96,10 +92,6 @@ export function MobileHero({ data }: { data: NonNullable<LandingContent['hero']>
         cancelAnimationFrame(frame)
         frame = 0
       } else schedule()
-    }
-    if (!enabled) {
-      paint()
-      return
     }
     const observer = new IntersectionObserver(([entry]) => {
       visible = entry.isIntersecting
@@ -128,7 +120,7 @@ export function MobileHero({ data }: { data: NonNullable<LandingContent['hero']>
   }, [compact, enabled])
 
   return (
-    <section className="mobile-hero" ref={gestureRoot} aria-label="Introduction">
+    <section className="mobile-hero" aria-label="Introduction">
       <div className="mobile-intro wrap">
         <p className="small-label mono">
           <span className="dot" />

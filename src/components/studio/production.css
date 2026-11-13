@@ -193,14 +193,6 @@ html:has(.studio-site) {
 .studio-site .hero-body {
   overflow-wrap: break-word;
 }
-.studio-site[data-motion='off'] .hero-track {
-  height: auto !important;
-}
-.studio-site[data-motion='off'] .hero {
-  position: relative;
-  height: auto;
-  min-height: 100svh;
-}
 .studio-site[data-motion='off'] .hero-copy {
   opacity: 1;
   transform: none;

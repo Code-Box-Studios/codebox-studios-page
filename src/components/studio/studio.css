@@ -18,7 +18,7 @@
   box-sizing: border-box;
 }
 html:has(.studio-site) {
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
   scroll-padding-top: 105px;
 }
 .studio-site {
@@ -1096,11 +1096,8 @@ html:has(.studio-site) {
   transform: none;
 }
 .studio-site[data-motion='on'] .reveal {
-  opacity: 0;
-  transform: translateY(35px);
-  transition:
-    opacity 0.9s,
-    transform 0.9s;
+  opacity: 1;
+  transform: none;
 }
 .studio-site[data-motion='on'] .reveal.in {
   opacity: 1;
@@ -1539,11 +1536,9 @@ html:has(.studio-site[data-motion='off']) {
   height: 280svh !important;
 }
 .studio-site .hero .hero-copy {
-  opacity: clamp(0, calc(1 - var(--p) * 3.2), 1);
-  transform: translateY(calc(var(--p) * -110px)) scale(calc(1 - var(--p) * 0.08));
-  transform-origin: left center;
-  filter: blur(calc(var(--p) * 7px));
-  will-change: transform, opacity;
+  opacity: 1;
+  transform: none;
+  filter: none;
 }
 .studio-site .hero-echo {
   position: absolute;
@@ -1551,8 +1546,8 @@ html:has(.studio-site[data-motion='off']) {
   top: 95px;
   z-index: 4;
   width: 60%;
-  opacity: clamp(0, calc((var(--p) - 0.33) * 4), 1);
-  transform: translateY(clamp(0px, calc((0.55 - var(--p)) * 110px), 60px));
+  opacity: 1;
+  transform: none;
   pointer-events: none;
 }
 .studio-site .hero-echo .small-label {
@@ -1782,15 +1777,12 @@ html:has(.studio-site[data-motion='off']) {
 }
 .studio-site .service {
   transition:
-    padding 0.45s,
-    border-color 0.45s,
-    background 0.45s;
+    border-color 0.18s,
+    background 0.18s;
 }
 .studio-site .service[open] {
   border-color: #e58b7f55;
   background: linear-gradient(110deg, #ff775906, transparent);
-  padding-left: 14px;
-  padding-right: 14px;
 }
 .studio-site .service h3 {
   transition:
@@ -1798,7 +1790,7 @@ html:has(.studio-site[data-motion='off']) {
     transform 0.3s;
 }
 .studio-site .service:hover h3 {
-  transform: translateX(5px);
+  color: var(--accent);
 }
 .studio-site .service-summary {
   position: relative;
@@ -1949,8 +1941,10 @@ html:has(.studio-site[data-motion='off']) {
   transform: none;
   filter: none;
 }
-.studio-site[data-motion='off'] .hero-echo {
-  display: none;
+.studio-site .hero :is(.hero-copy, .hero-echo)[aria-hidden='true'] {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
 }
 .studio-site[data-motion='off'] .kinetic-row,
 .studio-site[data-motion='off'] .project,
@@ -2047,8 +2041,7 @@ html:has(.studio-site[data-motion='off']) {
     bottom: 20%;
   }
   .studio-site .service[open] {
-    padding-left: 8px;
-    padding-right: 8px;
+    padding-inline: 0;
   }
 }
 @media (max-width: 1100px) {
@@ -2523,8 +2516,6 @@ html:has(.studio-site[data-motion='off']) {
   transform-style: preserve-3d;
 }
 .studio-site .spatial-services .service {
-  transform-origin: 100% 50%;
-  will-change: transform;
   background-color: #19191f;
   border: 1px solid #ffffff14;
   border-left: 2px solid #ff775960;
@@ -2565,10 +2556,7 @@ html:has(.studio-site[data-motion='off']) {
 }
 .studio-site .spatial-about > .wrap,
 .studio-site .spatial-contact > .wrap {
-  transform: translate3d(0, var(--section-rise, 0px), var(--section-depth, 0px))
-    rotateX(var(--section-tilt, 0deg));
-  transform-origin: center bottom;
-  will-change: transform;
+  transform: none;
 }
 @media (max-width: 1100px) {
   .studio-site .project-scene {
@@ -3233,7 +3221,7 @@ html:has(.studio-site[data-motion='off']) {
 }
 .studio-site .hero-echo {
   pointer-events: auto;
-  opacity: clamp(0, calc((var(--p) - 0.28) * 10), 1);
+  opacity: 1;
 }
 .studio-site .hero-echo h2 {
   font-size: clamp(45px, 5.7vw, 83px);
